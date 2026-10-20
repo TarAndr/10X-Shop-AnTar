@@ -1,16 +1,26 @@
+import { BrowserRouter, Route, Routes } from 'react-router';
 
+import ScrollToTop from './components/layout/ScrollToTop';
+import Layout from './components/layout/Layout';
+import HomePage from './pages/HomePage';
+import ProductsPage from './pages/ProductsPage';
+import CartPage from './pages/CartPage';
+import LoginPage from './pages/LoginPage';
 
 function App() {
-  
   return (
-    <>
-      <div className="bg-blue-600 text-white p-4">
-        <h1 className="text-3xl font-bold underline">
-          Hello world!
-        </h1>
-      </div>
-    </>
-  )
+    <BrowserRouter>
+      <ScrollToTop />
+      <Routes>
+        <Route element={<Layout />}>
+          <Route index element={<HomePage />} />
+          <Route path="products" element={<ProductsPage />} />
+          <Route path="cart" element={<CartPage />} />
+          <Route path="login" element={<LoginPage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
