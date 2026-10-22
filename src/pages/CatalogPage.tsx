@@ -1,12 +1,16 @@
-
 import { useEffect, useState } from 'react';
 import { fetchProducts } from '../api/products.api';
 import type { Product } from '../types';
+import ProductGrid from '../components/ProductGrid';
 
 function CatalogPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  function handleAddToCart(product: Product) {
+    console.info('Cart integration is not implemented yet:', product.id);
+  }
 
   useEffect(() => {
     let isActive = true;
@@ -69,13 +73,14 @@ function CatalogPage() {
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-8">
-      <h1 className="mb-6 text-2xl font-bold text-gray-900">
-        Products
-      </h1>
+        <h1 className="mb-6 text-2xl font-bold text-gray-900">
+          Products
+        </h1>
 
-      <p className="text-gray-600">
-        Loaded {products.length} products successfully.
-      </p>
+        <ProductGrid
+          products={products}
+          onAddToCart={handleAddToCart}
+        />
     </main>
   );
 }
