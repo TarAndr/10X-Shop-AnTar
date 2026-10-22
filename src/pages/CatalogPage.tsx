@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { fetchProducts } from '../api/products.api';
 import type { Product } from '../types';
 import ProductGrid from '../components/ProductGrid';
+import PageContainer from '../components/layout/PageContainer';
 
 function CatalogPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -45,34 +46,41 @@ function CatalogPage() {
 
   if (isLoading) {
     return (
-      <main className="mx-auto max-w-7xl px-4 py-8">
-        <p role="status" className="text-gray-600">
-          Loading products...
-        </p>
+      <main>
+        <PageContainer>
+          <p role="status" className="text-gray-600">
+            Loading products...
+          </p>
+        </PageContainer>
       </main>
     );
   }
 
   if (error) {
     return (
-      <main className="mx-auto max-w-7xl px-4 py-8">
-        <p role="alert" className="text-red-600">
-          {error}
-        </p>
+      <main>
+        <PageContainer>
+          <p role="alert" className="text-red-600">
+            {error}
+          </p>
+        </PageContainer>
       </main>
     );
   }
 
   if (products.length === 0) {
     return (
-      <main className="mx-auto max-w-7xl px-4 py-8">
-        <p className="text-gray-600">No products found.</p>
+      <main>
+        <PageContainer>
+          <p className="text-gray-600">No products found.</p>
+        </PageContainer>
       </main>
     );
   }
 
   return (
-    <main className="mx-auto max-w-7xl px-4 py-8">
+    <main>
+      <PageContainer>
         <h1 className="mb-6 text-2xl font-bold text-gray-900">
           Products
         </h1>
@@ -81,6 +89,7 @@ function CatalogPage() {
           products={products}
           onAddToCart={handleAddToCart}
         />
+      </PageContainer>
     </main>
   );
 }
