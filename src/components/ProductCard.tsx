@@ -1,3 +1,5 @@
+
+import { Link } from 'react-router';
 import type { Product } from '../types';
 import { discountedPrice, formatPrice } from '../utils/format';
 
@@ -17,19 +19,25 @@ function ProductCard({ product, onAddToCart }: ProductCardProps) {
 
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-      <img
-        src={product.thumbnail}
-        alt={product.title}
-        className="h-48 w-full bg-gray-50 object-contain p-4"
-        loading="lazy"
-      />
+      <Link
+        to={`/products/${product.id}`}
+        aria-label={`View details for ${product.title}`}
+        className="rounded-t-xl focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-gray-900"
+      >
+        <img
+          src={product.thumbnail}
+          alt={product.title}
+          className="h-48 w-full bg-gray-50 object-contain p-4"
+          loading="lazy"
+        />
 
-      <div className="flex flex-1 flex-col p-4">
-        <h2 className="line-clamp-2 min-h-12 font-semibold text-gray-900">
+        <h2 className="line-clamp-2 min-h-12 px-4 font-semibold text-gray-900 hover:underline">
           {product.title}
         </h2>
+      </Link>
 
-        <div className="mt-3 flex flex-wrap items-baseline gap-2">
+      <div className="flex flex-1 flex-col p-4">
+        <div className="flex flex-wrap items-baseline gap-2">
           <span className="text-lg font-bold text-gray-900">
             {formatPrice(finalPrice)}
           </span>
@@ -55,9 +63,7 @@ function ProductCard({ product, onAddToCart }: ProductCardProps) {
               Only {product.stock} left
             </span>
           ) : (
-            <span className="text-sm text-green-700">
-              In stock
-            </span>
+            <span className="text-sm text-green-700">In stock</span>
           )}
         </div>
 
