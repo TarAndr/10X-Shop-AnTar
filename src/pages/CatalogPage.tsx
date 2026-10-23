@@ -11,10 +11,10 @@ function CatalogPage() {
   const [error, setError] = useState<string | null>(null);
   const [cartMessage, setCartMessage] = useState('');
   const [toastVisible, setToastVisible] = useState(false);
-  const { addToCart } = useCart();
+  const { addItem } = useCart();
 
   function handleAddToCart(product: Product) {
-    const added = addToCart(product, 1);
+    const added = addItem(product, 1);
 
     setCartMessage(
       added > 0
