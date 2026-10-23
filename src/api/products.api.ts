@@ -1,5 +1,5 @@
 
-import type { ProductsResponse } from '../types';
+import type { Product, ProductsResponse } from '../types';
 
 const API_URL = 'https://dummyjson.com/products';
 
@@ -43,4 +43,31 @@ export async function fetchProducts({
   }
 
   return data as ProductsResponse;
+}
+
+export async function fetchProductById(id: number): Promise<Product> {
+  const response = await fetch(`${API_URL}/${id}`);
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch product: ${response.status} ${response.statusText}`,
+    );
+  }
+
+  const data: unknown = await response.json();
+
+  if (
+    typeof data !== 'object' ||
+    data === null ||
+    !('id' in data) ||
+    typeof data.id !== 'number' ||
+    !('title' in data) ||
+    typeof data.title !== 'string' ||
+    !('price' in data) ||
+    typeof data.price !== 'number'
+  ) {
+    throw new Error('Invalid product response');
+  }
+
+  return data as Product;
 }
