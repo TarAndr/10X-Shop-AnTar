@@ -1,5 +1,5 @@
-
 import { NavLink } from 'react-router';
+import { useCart } from '../../context/CartContext';
 
 const navLinkClass = ({ isActive }: { isActive: boolean }): string =>
   [
@@ -11,6 +11,8 @@ const navLinkClass = ({ isActive }: { isActive: boolean }): string =>
   ].join(' ');
 
 function Header() {
+  const { totalQuantity } = useCart();
+
   return (
     <header className="border-b border-gray-200 bg-white">
       <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
@@ -37,6 +39,11 @@ function Header() {
             <li>
               <NavLink to="/cart" className={navLinkClass}>
                 Cart
+                {totalQuantity > 0 && (
+                  <span className="inline-flex min-w-6 h-6 items-center justify-center rounded-full bg-red-600 ms-2 px-1.5 text-xs font-bold text-white">
+                    {totalQuantity}
+                  </span>
+                )}
               </NavLink>
             </li>
             <li>
