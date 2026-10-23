@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { fetchProducts } from '../api/products.api';
 import type { Product } from '../types';
+import { useCart } from '../context/CartContext';
 import ProductGrid from '../components/ProductGrid';
 import PageContainer from '../components/layout/PageContainer';
 
@@ -8,10 +9,31 @@ function CatalogPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [cartMessage, setCartMessage] = useState('');
+  const [toastVisible, setToastVisible] = useState(false);
+  const { addToCart } = useCart();
 
   function handleAddToCart(product: Product) {
-    console.info('Cart integration is not implemented yet:', product.id);
+    const added = addToCart(product, 1);
+
+    setCartMessage(
+      added > 0
+        ? `"${product.title}" added to cart.`
+        : `No additional stock available for "${product.title}".`,
+    );
+
+    setToastVisible(true);
   }
+
+  useEffect(() => {
+    if (!toastVisible) return;
+
+    const timer = window.setTimeout(() => {
+      setToastVisible(false);
+    }, 3000);
+
+    return () => window.clearTimeout(timer);
+  }, [toastVisible, cartMessage]);
 
   useEffect(() => {
     let isActive = true;
@@ -90,6 +112,15 @@ function CatalogPage() {
           onAddToCart={handleAddToCart}
         />
       </PageContainer>
+      {toastVisible && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="fixed top-5 right-15 z-50 max-w-sm rounded-lg bg-gray-900 px-5 py-4 text-sm text-white shadow-lg"
+        >
+          {cartMessage}
+        </div>
+      )}
     </main>
   );
 }
