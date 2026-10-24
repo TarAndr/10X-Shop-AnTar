@@ -1,4 +1,5 @@
-import { NavLink } from 'react-router';
+import { NavLink, Link, useNavigate } from 'react-router';
+import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 
 const navLinkClass = ({ isActive }: { isActive: boolean }): string =>
@@ -12,6 +13,13 @@ const navLinkClass = ({ isActive }: { isActive: boolean }): string =>
 
 function Header() {
   const { totalQuantity } = useCart();
+  const { user, isLoggedIn, logout } = useAuth();
+  const navigate = useNavigate();
+
+  function handleLogout(): void {
+    logout();
+    navigate('/', { replace: true });
+  }
 
   return (
     <header className="border-b border-gray-200 bg-white">
@@ -25,6 +33,29 @@ function Header() {
         </NavLink>
 
         <nav aria-label="Main navigation">
+          {isLoggedIn ? (
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-gray-700">
+                {user?.username}
+              </span>
+
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="min-h-11 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+              >
+                Log out
+              </button>
+            </div>
+          ) : (
+            <Link
+              to="/login"
+              className="inline-flex min-h-11 items-center rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+            >
+              Log in
+            </Link>
+          )}
+
           <ul className="flex flex-wrap items-center gap-1">
             <li>
               <NavLink to="/" end className={navLinkClass}>
@@ -44,11 +75,6 @@ function Header() {
                     {totalQuantity}
                   </span>
                 )}
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/login" className={navLinkClass}>
-                Login
               </NavLink>
             </li>
           </ul>
