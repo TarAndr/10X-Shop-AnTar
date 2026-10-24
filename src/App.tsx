@@ -10,7 +10,9 @@ import CatalogPage from './pages/CatalogPage';
 import ProductPage from './pages/ProductPage';
 import CartPage from './pages/CartPage';
 import LoginPage from './pages/LoginPage';
+import CheckoutPage from './pages/CheckoutPage';
 import NotFoundPage from './pages/NotFoundPage';
+import ProtectedRoute from './routes/ProtectedRoute';
 
 function App() {
   return (
@@ -22,9 +24,17 @@ function App() {
             <Route element={<Layout />}>
               <Route index element={<HomePage />} />
               <Route path="products" element={<CatalogPage />} />
+              <Route path="/products/:id" element={<ProductPage />} />
               <Route path="cart" element={<CartPage />} />
               <Route path="login" element={<LoginPage />} />
-              <Route path="/products/:id" element={<ProductPage />} />
+              <Route
+                path="/checkout"
+                element={
+                  <ProtectedRoute>
+                    <CheckoutPage />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="*" element={<NotFoundPage />} />
             </Route>
           </Routes>
