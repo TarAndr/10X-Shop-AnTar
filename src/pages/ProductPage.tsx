@@ -14,7 +14,7 @@ function ProductPage() {
   const [error, setError] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const { addToCart, getCartQuantity } = useCart();
+  const { addItem, items } = useCart();
   const [cartMessage, setCartMessage] = useState('');
 
   useEffect(() => {
@@ -62,6 +62,13 @@ function ProductPage() {
   return (
     <main>
       <PageContainer>
+        <Link
+          to="/"
+          className="mb-6 inline-flex min-h-11 items-center text-sm font-medium text-gray-600 transition-colors hover:text-gray-900 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gray-900"
+        >
+          ← Back to catalog
+        </Link>
+        
         {isLoading && (
           <p role="status" className="text-gray-600">
             Loading product...
@@ -188,10 +195,10 @@ function ProductPage() {
                     type="button"
                     disabled={
                       product.stock === 0 ||
-                      quantity > product.stock - getCartQuantity(product.id)
+                      quantity > product.stock - (items.find((item) => item.productId === product.id)?.quantity ?? 0)
                     }
                     onClick={() => {
-                      const added = addToCart(product, quantity);
+                      const added = addItem(product, quantity);
 
                       setCartMessage(
                         added > 0
