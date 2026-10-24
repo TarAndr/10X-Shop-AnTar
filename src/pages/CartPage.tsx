@@ -1,11 +1,10 @@
-
 import { Link } from 'react-router';
 import PageContainer from '../components/layout/PageContainer';
 import { useCart } from '../context/CartContext';
 import { discountedPrice, formatPrice } from '../utils/format';
 
 function CartPage() {
-  const { items, subtotal, setQuantity, removeItem } = useCart();
+  const { items, subtotal, setQuantity, removeItem, clear } = useCart();
 
   if (items.length === 0) {
     return (
@@ -167,6 +166,17 @@ function CartPage() {
             >
               Proceed to checkout
             </Link>
+            <button
+              type="button"
+              onClick={() => {
+                if (window.confirm('Clear the cart? This cannot be undone.')) {
+                  clear();
+                }
+              }}
+              className="mt-3 min-h-11 w-full rounded-lg border border-red-300 px-5 py-3 font-medium text-red-700 hover:bg-red-50 focus-visible:outline-2 focus-visible:outline-offset-2"
+            >
+              Clear cart
+            </button>
           </aside>
         </div>
       </PageContainer>
