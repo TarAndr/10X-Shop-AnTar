@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { ChangeEvent, FormEvent } from 'react';
+import type { ChangeEvent, SyntheticEvent } from 'react';
 import { Link, Navigate } from 'react-router';
 import PageContainer from '../components/layout/PageContainer';
 import { useAuth } from '../context/AuthContext';
@@ -75,7 +75,7 @@ function CheckoutPage() {
   }
 
   async function handleSubmit(
-    event: FormEvent<HTMLFormElement>,
+    event: SyntheticEvent<HTMLFormElement>,
   ): Promise<void> {
     event.preventDefault();
 
