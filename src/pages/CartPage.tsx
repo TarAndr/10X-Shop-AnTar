@@ -1,15 +1,29 @@
-import { Link } from 'react-router';
+import { Link, useLocation } from 'react-router';
 import PageContainer from '../components/layout/PageContainer';
 import { useCart } from '../context/CartContext';
 import { discountedPrice, formatPrice } from '../utils/format';
 
 function CartPage() {
   const { items, subtotal, setQuantity, removeItem, clear } = useCart();
+  const location = useLocation();
+  const navigationState = location.state as {
+    message?: string;
+  } | null;
+
+  const checkoutMessage = navigationState?.message;
 
   if (items.length === 0) {
     return (
       <main>
         <PageContainer>
+          {checkoutMessage && (
+            <p
+              role="status"
+              className="mb-6 rounded-lg bg-amber-50 p-4 text-sm text-amber-900"
+            >
+              {checkoutMessage}
+            </p>
+          )}
           <h1 className="text-3xl font-bold text-gray-900">
             Shopping cart
           </h1>
