@@ -2,6 +2,7 @@ import {
   createContext,
   useContext,
   useState,
+  useEffect,
 } from 'react';
 import type { ReactNode } from 'react';
 import type { AuthUser } from '../types';
@@ -22,7 +23,46 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<AuthUser | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(() => {
+    try {
+      const savedUser = localStorage.getItem('shop_user');
+
+      if (!savedUser) {
+        return null;
+      }
+
+      const parsedUser: unknown = JSON.parse(savedUser);
+
+      if (
+        typeof parsedUser === 'object' &&
+        parsedUser !== null &&
+        'username' in parsedUser &&
+        typeof parsedUser.username === 'string' &&
+        parsedUser.username.trim().length > 0
+      ) {
+        return {
+          username: parsedUser.username,
+          isLoggedIn: true,
+        };
+      }
+
+      return null;
+    } catch {
+      return null;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      if (user) {
+        localStorage.setItem('shop_user', JSON.stringify(user));
+      } else {
+        localStorage.removeItem('shop_user');
+      }
+    } catch {
+      // Authentication remains available for the current session.
+    }
+  }, [user]);
 
   function login(username: string): void {
     const normalizedUsername = username.trim();
