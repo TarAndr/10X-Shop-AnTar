@@ -32,3 +32,16 @@ https://github.com/TarAndr/10X-Shop-AnTar/commit/b6a4905
 
 Interactive elements should have distinct, non-overlapping responsibilities. A product card can provide navigation while retaining independent controls for actions such as adding an item to the cart.
 
+### Cart total differs from displayed item subtotal
+
+- **Symptom:** The displayed subtotal for a cart item did not match the Order Summary and Total. For example, four units priced at `$69.56` each produced an item subtotal of `$278.24`, while the Order Summary and Total showed `$278.22`.
+- **Reproduction steps:**
+  1. Add a product to the cart.
+  2. Set its quantity to four.
+  3. Open the Cart page and compare the item subtotal with the Order Summary and Total.
+  4. Proceed to Checkout and compare the Order Summary with the Total.
+- **Evidence:** The Cart page displayed `$278.24` for the item subtotal and `$278.22` for the Order Summary. The Checkout page also displayed `$278.24` in the Order Summary and `$278.22` as the Total.
+- **Root cause:** The cart total was calculated using the unrounded discounted unit price, while the displayed item subtotal used the discounted price rounded to two decimal places. This difference in rounding order caused a discrepancy in the final amount.
+- **Fix:** Updated the cart subtotal calculation to use the shared `discountedPrice()` utility for each item's unit price before multiplying by quantity. This aligns the cart total with the displayed item subtotals.
+- **Fix commit:** `[TODO: INSERT COMMIT HASH HERE]`
+- **Lesson learned:** Monetary calculations must use a consistent rounding strategy across item subtotals, order summaries, and final totals to prevent discrepancies.

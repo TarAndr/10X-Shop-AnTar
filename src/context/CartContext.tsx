@@ -6,6 +6,7 @@ import {
 } from 'react';
 import type { ReactNode } from 'react';
 import type { CartItem, Product } from '../types';
+import { discountedPrice } from '../utils/format';
 
 interface CartContextValue {
   items: CartItem[];
@@ -179,10 +180,10 @@ export function CartProvider({ children }: CartProviderProps) {
 
   const subtotal = Math.round(
     items.reduce((total, item) => {
-      const discountedPrice =
-        item.price * (1 - item.discountPercentage / 100);
+      const discounted =
+        discountedPrice(item.price, item.discountPercentage);
 
-      return total + discountedPrice * item.quantity;
+      return total + discounted * item.quantity;
     }, 0) * 100,
   ) / 100;
 
