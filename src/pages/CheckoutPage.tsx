@@ -199,31 +199,31 @@ function CheckoutPage() {
     type: string;
     autoComplete: string;
   }[] = [
-    {
-      name: 'fullName',
-      label: 'Full name',
-      type: 'text',
-      autoComplete: 'name',
-    },
-    {
-      name: 'email',
-      label: 'Email',
-      type: 'email',
-      autoComplete: 'email',
-    },
-    {
-      name: 'address',
-      label: 'Address',
-      type: 'text',
-      autoComplete: 'street-address',
-    },
-    {
-      name: 'city',
-      label: 'City',
-      type: 'text',
-      autoComplete: 'address-level2',
-    },
-  ];
+      {
+        name: 'fullName',
+        label: 'Full name',
+        type: 'text',
+        autoComplete: 'name',
+      },
+      {
+        name: 'email',
+        label: 'Email',
+        type: 'email',
+        autoComplete: 'email',
+      },
+      {
+        name: 'address',
+        label: 'Address',
+        type: 'text',
+        autoComplete: 'street-address',
+      },
+      {
+        name: 'city',
+        label: 'City',
+        type: 'text',
+        autoComplete: 'address-level2',
+      },
+    ];
 
   return (
     <PageContainer>
@@ -318,9 +318,9 @@ function CheckoutPage() {
 
           <Link
             to="/cart"
-            className="mt-4 inline-flex min-h-11 items-center text-sm font-medium text-gray-600 hover:text-gray-900"
+            className="mt-4 inline-flex min-h-11 items-center rounded-lg bg-gray-900 px-5 py-3 font-medium text-white hover:bg-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
           >
-            ← Back to cart
+            Back to cart
           </Link>
         </aside>
       </div>

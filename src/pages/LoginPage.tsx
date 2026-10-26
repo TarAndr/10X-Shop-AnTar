@@ -64,9 +64,9 @@ function LoginPage() {
       <div className="mx-auto w-full max-w-md">
         <Link
           to="/products"
-          className="mb-6 inline-flex min-h-11 items-center text-sm font-medium text-gray-600 hover:text-gray-900"
+          className="mb-4 inline-flex min-h-11 items-center rounded-lg bg-gray-900 px-5 py-3 font-medium text-white hover:bg-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
         >
-          ← Back to catalog
+          Back to catalog
         </Link>
 
         <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">

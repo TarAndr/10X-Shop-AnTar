@@ -64,11 +64,11 @@ function ProductPage() {
       <PageContainer>
         <Link
           to="/"
-          className="mb-6 inline-flex min-h-11 items-center text-sm font-medium text-gray-600 transition-colors hover:text-gray-900 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gray-900"
+          className="mb-4 inline-flex min-h-11 items-center rounded-lg bg-gray-900 px-5 py-3 font-medium text-white hover:bg-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
         >
-          ← Back to catalog
+          Back to catalog
         </Link>
-        
+
         {isLoading && (
           <p role="status" className="text-gray-600">
             Loading product...
@@ -76,7 +76,7 @@ function ProductPage() {
         )}
 
         {!isLoading && error && (
-          <section>
+          <section className="py-12 text-center">
             <h1 className="text-2xl font-bold text-gray-900">
               Page not found
             </h1>
@@ -84,13 +84,6 @@ function ProductPage() {
             <p role="alert" className="mt-3 text-gray-600">
               The product you are looking for does not exist.
             </p>
-
-            <Link
-              to="/"
-              className="mt-5 inline-flex min-h-11 items-center justify-center rounded-lg bg-gray-900 px-5 py-2 font-medium text-white hover:bg-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
-            >
-              Go to catalog
-            </Link>
           </section>
         )}
 
