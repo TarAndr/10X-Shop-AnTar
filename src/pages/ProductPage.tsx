@@ -86,7 +86,7 @@ function ProductPage() {
             </p>
 
             <Link
-              to="/products"
+              to="/"
               className="mt-5 inline-flex min-h-11 items-center justify-center rounded-lg bg-gray-900 px-5 py-2 font-medium text-white hover:bg-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
             >
               Go to catalog

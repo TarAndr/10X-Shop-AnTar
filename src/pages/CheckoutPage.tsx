@@ -171,7 +171,7 @@ function CheckoutPage() {
           </div>
 
           <Link
-            to="/products"
+            to="/"
             className="mt-6 inline-flex min-h-11 items-center rounded-lg bg-gray-900 px-5 py-3 font-medium text-white hover:bg-gray-700"
           >
             Continue shopping

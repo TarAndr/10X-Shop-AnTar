@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
 
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
@@ -7,7 +7,6 @@ import ScrollToTop from './components/layout/ScrollToTop';
 import Layout from './components/layout/Layout';
 import ErrorBoundary from './components/ErrorBoundary';
 
-import HomePage from './pages/HomePage';
 import CatalogPage from './pages/CatalogPage';
 import ProductPage from './pages/ProductPage';
 import CartPage from './pages/CartPage';
@@ -25,8 +24,11 @@ function App() {
             <ScrollToTop />
             <Routes>
               <Route element={<Layout />}>
-                <Route index element={<HomePage />} />
-                <Route path="products" element={<CatalogPage />} />
+                <Route index element={<CatalogPage />} />
+                <Route
+                  path="products"
+                  element={<Navigate to="/" replace />}
+                />
                 <Route path="/products/:id" element={<ProductPage />} />
                 <Route path="cart" element={<CartPage />} />
                 <Route path="login" element={<LoginPage />} />
