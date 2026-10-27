@@ -1,4 +1,3 @@
-
 import { Link } from 'react-router';
 import type { Product } from '../types';
 import { discountedPrice, formatPrice } from '../utils/format';

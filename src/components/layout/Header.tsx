@@ -8,7 +8,7 @@ const navLinkClass = ({ isActive }: { isActive: boolean }): string =>
     'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600',
     isActive
       ? 'bg-blue-600 text-white'
-      : 'text-gray-700 hover:bg-gray-100 hover:text-blue-700',
+      : 'text-gray-700 hover:bg-gray-200 hover:text-blue-700',
   ].join(' ');
 
 function Header() {
@@ -32,17 +32,17 @@ function Header() {
           10X Shop
         </NavLink>
 
-        <nav aria-label="Main navigation">
+        <nav aria-label="Main navigation" className="flex flex-wrap items-center gap-3">
           {isLoggedIn ? (
             <div className="flex items-center gap-3">
               <span className="text-sm text-gray-700">
-                {user?.username}
+                Hello, {user?.username}
               </span>
 
               <button
                 type="button"
                 onClick={handleLogout}
-                className="min-h-11 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+                className="cursor-pointer min-h-11 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
               >
                 Log out
               </button>
@@ -50,7 +50,7 @@ function Header() {
           ) : (
             <Link
               to="/login"
-              className="inline-flex min-h-11 items-center rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+              className="inline-flex min-h-11 items-center rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
             >
               Log in
             </Link>
