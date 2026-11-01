@@ -4,8 +4,8 @@ A single-page online shop built as an individual graduation project for the **10
 
 > **Note:** Login and Checkout are local simulations by design. There is no real authentication, no server and no payment processing, and no card data is ever collected or stored.
 
-**Live demo:** TODO: paste your Vercel / Netlify URL here
-**Repository:** `10x-shop-{TODO-your-name}`
+**Live demo:** [https://10-x-shop-antar.vercel.app/](https://10-x-shop-antar.vercel.app/)
+**Repository:** `10X-Shop-AnTar`
 
 ---
 
@@ -48,8 +48,6 @@ A single-page online shop built as an individual graduation project for the **10
 
 ### Optional features (FULL)
 
-<!-- TODO: keep ONLY the items that are really implemented and working. Delete the rest. -->
-
 - [ ] Category filter, sorting and pagination with the state stored in the URL (`useSearchParams`)
 - [ ] Search with debounce and request cancellation (`AbortController`)
 - [ ] Retry button on a failed catalog request
@@ -77,7 +75,7 @@ Real authentication, real payments, a backend, order history, user profile and r
 | Data source | [DummyJSON](https://dummyjson.com/) products API, called with `fetch` |
 | State | `useState`, `useEffect`, React Context (auth and cart) |
 | Linting | ESLint with `typescript-eslint` and `eslint-plugin-react-hooks` |
-| Hosting | Vercel / Netlify (TODO: keep the one you used) |
+| Hosting | Vercel |
 
 No UI kits, form libraries or state-management libraries are used.
 
@@ -92,8 +90,8 @@ No UI kits, form libraries or state-management libraries are used.
 ### Install and run
 
 ```bash
-git clone https://github.com/TODO-your-username/10x-shop-TODO-your-name.git
-cd 10x-shop-TODO-your-name
+git clone https://github.com/TarAndr/10X-Shop-AnTar.git
+cd 10X-Shop-AnTar
 npm install
 npm run dev
 ```
@@ -121,8 +119,6 @@ npm run preview     # serve the production build locally
 | `typecheck` | `tsc` (no emit) | Runs the TypeScript compiler in strict mode without producing files |
 | `lint` | `eslint .` | Lints the source code; `any` is forbidden by `@typescript-eslint/no-explicit-any` |
 
-<!-- TODO: check the exact commands in your package.json and adjust the table if they differ. -->
-
 ---
 
 ## Routes
@@ -132,6 +128,7 @@ All pages are rendered inside one shared `Layout` (header, `<Outlet />`, footer)
 | Route | Page | Access |
 |---|---|---|
 | `/` | Catalog | Public |
+| `/products` | Redirects to `/` | Public |
 | `/login` | Login | Public |
 | `/products/:id` | Product details | Public |
 | `/cart` | Cart | Public |
@@ -155,8 +152,6 @@ src/
 └── utils/        # Pure helpers: formatPrice, discountedPrice, validation functions
 ```
 
-<!-- TODO: update the tree so it matches your real folders and files. -->
-
 ### Data flow
 
 User actions call event handlers, which update state through `useState` or a Context function. React then re-renders the affected components from the new immutable state. Data is fetched inside `useEffect`, and the loading, error and empty states are rendered with conditional rendering. Shared state is kept in two Contexts: `AuthContext` (who is logged in) and `CartContext` (cart items and the actions that change them), so components do not need to pass this data down through many levels of props.
@@ -167,7 +162,7 @@ User actions call event handlers, which update state through `useState` or a Con
 - **Immutable updates only.** Cart changes use `map`, `filter` and the spread operator and never mutate existing state.
 - **One source of truth for types.** Every domain type lives in `src/types/`; no type is defined twice.
 - **Stock is respected everywhere.** The product page and the cart never allow a quantity above the available stock.
-- **Persistence is limited.** Only the cart is stored in `localStorage` (key `shop_cart`). The login state is intentionally not persisted and resets on reload.
+- **Persistence is limited.** The cart and simulated login state are stored in `localStorage` (`shop_cart` and `shop_user`). No passwords or payment details are stored.
 
 ---
 
@@ -180,8 +175,6 @@ The app uses the public [DummyJSON](https://dummyjson.com/docs/products) API.
 | `GET https://dummyjson.com/products?limit=12&skip=0` | Catalog list |
 | `GET https://dummyjson.com/products/{id}` | Product details (404 for an unknown id) |
 
-<!-- TODO: add the extra endpoints only if you implemented them (e.g. /products/categories, /products/category/{slug}, /products/search?q=). -->
-
 **Price calculation.** The discounted price is `price × (1 − discountPercentage / 100)`, rounded to two decimals and formatted as US dollars (for example `$1,299.00`).
 
 **localStorage keys.**
@@ -189,7 +182,7 @@ The app uses the public [DummyJSON](https://dummyjson.com/docs/products) API.
 | Key | Content |
 |---|---|
 | `shop_cart` | Cart items (product id, title, thumbnail, price, discount, stock and quantity) |
-
+| `shop_user` | Simulated authenticated user's username |
 ---
 
 ## Forms and validation
@@ -240,9 +233,6 @@ While a valid order is being placed, the *Place order* button is disabled to pre
 The app is a single-page application, so the hosting platform must serve `index.html` for every path. Otherwise opening a link such as `/products/5` directly, or refreshing the page, returns a 404 from the server.
 
 - **Vercel:** `vercel.json` contains a rewrite from `/(.*)` to `/index.html`.
-- **Netlify:** `public/_redirects` contains `/*  /index.html  200`.
-
-<!-- TODO: keep only the line for the platform you used. -->
 
 To deploy your own copy, import the repository into Vercel or Netlify, use the build command `npm run build` and the output directory `dist`.
 
@@ -281,9 +271,7 @@ A quick walkthrough that covers the main flow:
 
 ## Known limitations
 
-<!-- TODO: be honest and specific. Examples are below; replace them with your own. -->
-
-- The login state is not saved between page reloads.
+- Login is a local simulation. The username is persisted in localStorage, but there is no real authentication or server-side session management.
 - The order is only confirmed on screen; orders are not stored or listed anywhere.
 - The product data comes from a public test API and may change or be slow.
 - Features listed as not included above are out of scope for this project.
@@ -298,14 +286,12 @@ A quick walkthrough that covers the main flow:
 | [`REPORT.md`](./REPORT.md) | Final report: planned vs delivered, metrics, hardest problems |
 | [`DEBUG-LOG.md`](./DEBUG-LOG.md) | Real bugs found and fixed, with the tools used |
 
-<!-- TODO: add COMPATIBILITY.md and the docs/lighthouse folder if you created them. -->
-
 ---
 
 ## Credits
 
 - Product data: [DummyJSON](https://dummyjson.com/)
 - Built with [Vite](https://vite.dev/), [React](https://react.dev/), [TypeScript](https://www.typescriptlang.org/), [React Router](https://reactrouter.com/) and [Tailwind CSS](https://tailwindcss.com/)
-- AI assistance: **Claude** (Anthropic) was used for TODO: describe honestly what you used it for (for example planning, explanations, code review), and add anyone else who helped.
+- AI assistance: **Claude** (Anthropic) was used for planning, **Chat GPT** was used for  explanations, code review.
 
-Author: **TODO: your name** · 10X Front-end graduation project · 2026
+Author: **Andrey Tarasenko** · 10X Front-end graduation project · 2026
