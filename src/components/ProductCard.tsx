@@ -5,9 +5,14 @@ import { discountedPrice, formatPrice } from '../utils/format';
 interface ProductCardProps {
   product: Product;
   onAddToCart: (product: Product) => void;
+  priority?: boolean;
 }
 
-function ProductCard({ product, onAddToCart }: ProductCardProps) {
+function ProductCard({
+  product,
+  onAddToCart,
+  priority = false,
+}: ProductCardProps) {
   const finalPrice = discountedPrice(
     product.price,
     product.discountPercentage,
@@ -27,7 +32,8 @@ function ProductCard({ product, onAddToCart }: ProductCardProps) {
           src={product.thumbnail}
           alt={product.title}
           className="h-48 w-full bg-gray-50 object-contain p-4"
-          loading="lazy"
+          loading={priority ? 'eager' : 'lazy'}
+          fetchPriority={priority ? 'high' : 'auto'}
         />
 
         <h2 className="line-clamp-2 min-h-12 px-4 font-semibold text-gray-900 hover:underline">
