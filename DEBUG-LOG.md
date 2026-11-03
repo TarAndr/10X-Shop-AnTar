@@ -64,7 +64,7 @@ Updated the cart subtotal calculation to use the shared `discountedPrice()` util
 
 `fix: align cart totals with rounded unit prices`
 
-[View commit](https://github.com/TarAndr/10X-Shop-AnTar/commit/bd832b0)
+[View commit](https://github.com/TarAndr/10X-Shop-AnTar/commit/bd832b09210e4184d5b7f169714bf91c799a055a)
 
 **Lesson learned**
 
@@ -100,7 +100,7 @@ Updated `AuthContext` to initialize the authentication state from `localStorage`
 
 `feat: save isLogged in localStorage`
 
-[View commit](https://github.com/TarAndr/10X-Shop-AnTar/commit/fec9378)
+[View commit](https://github.com/TarAndr/10X-Shop-AnTar/commit/fec9378e124d3806d75c36248ffc4808ccf57ec9)
 
 **Lesson learned**
 

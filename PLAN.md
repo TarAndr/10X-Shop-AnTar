@@ -29,7 +29,7 @@
 
 ### Routes (CORE)
 
-`/` Catalog · `/login` · `/products/:id` · `/cart` · `/checkout` (guest is redirected to `/login`, then returned to `/checkout`) · `*` Not Found.
+`/` Catalog · `/products` (redirects to `/`) · `/login` · `/products/:id` · `/cart` · `/checkout` (guest is redirected to `/login`, then returned to `/checkout`) · `*` Not Found.
 
 ## 2. Timeline
 
@@ -162,24 +162,24 @@ If FULL work is started, it goes into separate branches so CORE stays stable and
 - I can explain the code in my own words.
 
 **For CORE as a whole (final checklist)**
-- [ ] `npm install && npm run typecheck && npm run build` succeed; `npm run lint` shows no `any`.
-- [ ] Routes work: `/`, `/login`, `/products/:id`, `/cart`, `/checkout`, `*`.
-- [ ] Login validation and Context state work; guest is redirected from `/checkout` and returned after login.
-- [ ] Catalog loads from DummyJSON with loading / error / empty states.
-- [ ] Product details work; invalid id shows NotFound.
-- [ ] Cart: add, change quantity, remove, totals; Header badge in sync.
-- [ ] Checkout: controlled form, validation, order confirmation, cart cleared.
-- [ ] Responsive at 375 px with no horizontal scroll; hover / focus / disabled states present.
-- [ ] Error Boundary and `DEBUG-LOG.md` (3+ real bugs) done.
-- [ ] Lighthouse before/after saved; Chrome + Firefox checked.
-- [ ] Deployed; `/products/5` works on refresh; link is in README.
-- [ ] `README.md` (EN), `PLAN.md`, `REPORT.md` in the repo; Git history is real and meaningful.
-- [ ] Repository submitted before **6 Nov, 23:59**.
+- [X] `npm install && npm run typecheck && npm run build` succeed; `npm run lint` shows no `any`.
+- [X] Routes work: `/`, `/products` (redirect), `/login`, `/products/:id`, `/cart`, `/checkout`, `*`.
+- [X] Login validation and Context state work; guest is redirected from `/checkout` and returned after login.
+- [X] Catalog loads from DummyJSON with loading / error / empty states.
+- [X] Product details work; invalid id shows NotFound.
+- [X] Cart: add, change quantity, remove, totals; Header badge in sync.
+- [X] Checkout: controlled form, validation, order confirmation, cart cleared.
+- [X] Responsive at 375 px with no horizontal scroll; hover / focus / disabled states present.
+- [X] Error Boundary and `DEBUG-LOG.md` (3+ real bugs) done.
+- [X] Lighthouse before/after saved; Chrome + Firefox checked.
+- [X] Deployed; `/products/5` works on refresh; link is in README.
+- [X] `README.md` (EN), `PLAN.md`, `REPORT.md` in the repo; Git history is real and meaningful.
+- [X] Repository submitted before **6 Nov, 23:59**.
 
 ## 6. Decisions and open points
 
 - **Checkout fields.** The spec contains leftover rows from an older 11-field schema (phone, postal code, country, card). By the spec's own priority rule, the CORE definition wins: **four fields** (Full name, Email, Address, City). No card fields at all.
-- **Login persistence.** Not required; losing the login on refresh is allowed. Only the cart is stored in `localStorage` (`shop_cart`).
+- **Login persistence.** Login remains a local simulation with no real authentication or backend API. The username is stored in `localStorage` (`shop_user`) so the simulated login state survives page reloads. No passwords or authentication tokens are stored. The cart is stored separately in `localStorage` (`shop_cart`).
 - **Data fetching.** Plain `fetch` inside `useEffect` or a small typed API function; no custom hook or `ApiClient` in CORE.
 - **Language of docs.** `PLAN.md` and `README.md` in English; `REPORT.md` in English for consistency.
 - **Test account in README.** `emilys / emilyspass` as the spec asks, with a note that any valid input works because Login is simulated.
