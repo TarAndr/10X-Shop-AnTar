@@ -6,6 +6,8 @@ import {
 } from 'react';
 import type { ReactNode } from 'react';
 import type { AuthUser } from '../types';
+import { STORAGE_KEYS } from '../utils/storage';
+import { isRecord } from '../utils/guards';
 
 interface AuthContextValue {
   user: AuthUser | null;
@@ -25,7 +27,7 @@ interface AuthProviderProps {
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<AuthUser | null>(() => {
     try {
-      const savedUser = localStorage.getItem('shop_user');
+      const savedUser = localStorage.getItem(STORAGE_KEYS.user);
 
       if (!savedUser) {
         return null;
@@ -34,9 +36,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const parsedUser: unknown = JSON.parse(savedUser);
 
       if (
-        typeof parsedUser === 'object' &&
-        parsedUser !== null &&
-        'username' in parsedUser &&
+        isRecord(parsedUser) &&
         typeof parsedUser.username === 'string' &&
         parsedUser.username.trim().length > 0
       ) {
@@ -55,9 +55,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     try {
       if (user) {
-        localStorage.setItem('shop_user', JSON.stringify(user));
+        localStorage.setItem(STORAGE_KEYS.user, JSON.stringify(user));
       } else {
-        localStorage.removeItem('shop_user');
+        localStorage.removeItem(STORAGE_KEYS.user);
       }
     } catch {
       // Authentication remains available for the current session.

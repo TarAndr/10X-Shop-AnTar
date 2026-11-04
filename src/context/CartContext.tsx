@@ -7,6 +7,7 @@ import {
 import type { ReactNode } from 'react';
 import type { CartItem, Product } from '../types';
 import { discountedPrice } from '../utils/format';
+import { STORAGE_KEYS } from '../utils/storage';
 
 interface CartContextValue {
   items: CartItem[];
@@ -17,8 +18,6 @@ interface CartContextValue {
   setQuantity: (productId: number, quantity: number) => void;
   clear: () => void;
 }
-
-const STORAGE_KEY = 'shop_cart';
 
 const CartContext = createContext<CartContextValue | undefined>(undefined);
 
@@ -57,7 +56,7 @@ function isCartItem(value: unknown): value is CartItem {
 
 function loadCart(): CartItem[] {
   try {
-    const storedValue = localStorage.getItem(STORAGE_KEY);
+    const storedValue = localStorage.getItem(STORAGE_KEYS.cart);
 
     if (storedValue === null) {
       return [];
@@ -80,7 +79,7 @@ export function CartProvider({ children }: CartProviderProps) {
 
   useEffect(() => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+      localStorage.setItem(STORAGE_KEYS.cart, JSON.stringify(items));
     } catch {
       // The cart remains usable in memory if storage is unavailable.
     }
