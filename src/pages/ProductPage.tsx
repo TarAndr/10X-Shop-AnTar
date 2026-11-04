@@ -5,6 +5,7 @@ import { fetchProductById } from '../api/products.api';
 import { discountedPrice, formatPrice } from '../utils/format';
 import PageContainer from '../components/layout/PageContainer';
 import type { Product } from '../types';
+import { ApiError } from '../api/api-client';
 
 function ProductPage() {
   const { id } = useParams<{ id: string }>();
@@ -41,11 +42,16 @@ function ProductPage() {
           setSelectedImage(0);
           setQuantity(1);
         }
-      } catch {
+      } catch (error) {
         if (isActive) {
-          setError('Product not found.');
+          if (error instanceof ApiError && error.status === 404) {
+            setError('Product not found.');
+          } else {
+            setError('Unable to load product. Please try again.');
+          }
         }
-      } finally {
+      }
+      finally {
         if (isActive) {
           setIsLoading(false);
         }
@@ -76,16 +82,29 @@ function ProductPage() {
 
       {!isLoading && error && (
         <section className="py-12 text-center">
-          <h1 className="text-2xl font-bold text-gray-900">
-            Page not found
-          </h1>
+          {error === 'Product not found.' ? (
+            <>
+              <h1 className="text-2xl font-bold text-gray-900">
+                Page not found
+              </h1>
 
-          <p role="alert" className="mt-3 text-gray-600">
-            The product you are looking for does not exist.
-          </p>
+              <p role="alert" className="mt-3 text-gray-600">
+                The product you are looking for does not exist.
+              </p>
+            </>
+          ) : (
+            <>
+              <h1 className="text-2xl font-bold text-gray-900">
+                Unable to load product
+              </h1>
+
+              <p role="alert" className="mt-3 text-gray-600">
+                {error}
+              </p>
+            </>
+          )}
         </section>
       )}
-
 
       {!isLoading && product && (
         <section className="grid grid-cols-1 gap-8 md:grid-cols-2">

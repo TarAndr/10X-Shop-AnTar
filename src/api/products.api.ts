@@ -1,5 +1,5 @@
-
 import type { Product, ProductsResponse } from '../types';
+import { apiClient } from './api-client';
 
 const API_URL = 'https://dummyjson.com/products';
 
@@ -17,15 +17,7 @@ export async function fetchProducts({
   url.searchParams.set('limit', String(limit));
   url.searchParams.set('skip', String(skip));
 
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch products: ${response.status} ${response.statusText}`,
-    );
-  }
-
-  const data: unknown = await response.json();
+  const data: unknown = await apiClient.get(url);
 
   if (
     typeof data !== 'object' ||
@@ -46,15 +38,7 @@ export async function fetchProducts({
 }
 
 export async function fetchProductById(id: number): Promise<Product> {
-  const response = await fetch(`${API_URL}/${id}`);
-
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch product: ${response.status} ${response.statusText}`,
-    );
-  }
-
-  const data: unknown = await response.json();
+  const data: unknown = await apiClient.get(`${API_URL}/${id}`);
 
   if (
     typeof data !== 'object' ||
