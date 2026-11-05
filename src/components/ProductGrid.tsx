@@ -8,7 +8,7 @@ interface ProductGridProps {
 
 function ProductGrid({ products, onAddToCart }: ProductGridProps) {
   if (products.length === 0) {
-    return <p className="text-gray-600">No products found.</p>;
+    return <p className="text-text-secondary">No products found.</p>;
   }
 
   return (

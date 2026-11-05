@@ -120,13 +120,13 @@ function CheckoutPage() {
       <PageContainer>
         <section
           aria-live="polite"
-          className="mx-auto max-w-2xl rounded-xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8"
+          className="mx-auto max-w-2xl rounded-xl border border-border-default bg-surface p-6 shadow-sm sm:p-8"
         >
-          <h1 className="mb-4 text-2xl font-bold text-gray-900">
+          <h1 className="mb-4 text-2xl font-bold text-text-primary">
             Thank you! Your order has been placed.
           </h1>
 
-          <p className="mb-6 text-gray-600">
+          <p className="mb-6 text-text-secondary">
             Order confirmation for {order.customer.fullName}.
           </p>
 
@@ -155,12 +155,12 @@ function CheckoutPage() {
             ))}
           </ul>
 
-          <div className="mt-4 flex justify-between border-t border-gray-200 pt-4 text-lg font-bold">
+          <div className="mt-4 flex justify-between border-t border-border-default pt-4 text-lg font-bold">
             <span>Total</span>
             <span>{formatPrice(order.total)}</span>
           </div>
 
-          <div className="mt-6 rounded-lg bg-gray-50 p-4">
+          <div className="mt-6 rounded-lg bg-page p-4">
             <h2 className="mb-2 font-semibold">
               Delivery details
             </h2>
@@ -172,7 +172,7 @@ function CheckoutPage() {
 
           <Link
             to="/"
-            className="mt-6 inline-flex min-h-11 items-center rounded-lg bg-gray-900 px-5 py-3 font-medium text-white hover:bg-gray-700"
+            className="mt-6 inline-flex min-h-11 items-center rounded-lg bg-brand px-5 py-3 font-medium text-white hover:bg-brand-hover"
           >
             Continue shopping
           </Link>
@@ -227,12 +227,12 @@ function CheckoutPage() {
 
   return (
     <PageContainer>
-      <h1 className="mb-8 text-3xl font-bold text-gray-900">
+      <h1 className="mb-8 text-3xl font-bold text-text-primary">
         Checkout
       </h1>
 
       <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
-        <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+        <section className="rounded-xl border border-border-default bg-surface p-6 shadow-sm">
           <h2 className="mb-6 text-xl font-semibold">
             Delivery information
           </h2>
@@ -260,7 +260,7 @@ function CheckoutPage() {
                       ? `${field.name}-error`
                       : undefined
                   }
-                  className="min-h-11 w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-gray-900 focus:ring-2 focus:ring-gray-200"
+                  className="min-h-11 w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-brand focus:ring-2 focus:ring-gray-200"
                 />
 
                 {errors[field.name] && (
@@ -278,14 +278,14 @@ function CheckoutPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="min-h-11 w-full rounded-lg bg-gray-900 px-4 py-3 font-medium text-white hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-60"
+              className="min-h-11 w-full rounded-lg bg-brand px-4 py-3 font-medium text-white hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isSubmitting ? 'Placing order...' : 'Place order'}
             </button>
           </form>
         </section>
 
-        <aside className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+        <aside className="rounded-xl border border-border-default bg-surface p-6 shadow-sm">
           <h2 className="mb-4 text-xl font-semibold">
             Order summary
           </h2>
@@ -311,14 +311,14 @@ function CheckoutPage() {
             ))}
           </ul>
 
-          <div className="mt-4 flex justify-between border-t border-gray-200 pt-4 font-bold">
+          <div className="mt-4 flex justify-between border-t border-border-default pt-4 font-bold">
             <span>Total</span>
             <span>{formatPrice(subtotal)}</span>
           </div>
 
           <Link
             to="/cart"
-            className="mt-4 inline-flex min-h-11 items-center rounded-lg bg-gray-900 px-5 py-3 font-medium text-white hover:bg-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
+            className="mt-4 inline-flex min-h-11 items-center rounded-lg bg-brand px-5 py-3 font-medium text-white hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
           >
             Back to cart
           </Link>

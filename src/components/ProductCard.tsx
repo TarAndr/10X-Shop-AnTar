@@ -22,28 +22,28 @@ function ProductCard({
   const isLowStock = product.stock > 0 && product.stock <= 5;
 
   return (
-    <article className="flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+    <article className="flex h-full flex-col overflow-hidden rounded-xl border border-border-default bg-surface shadow-sm">
       <Link
         to={`/products/${product.id}`}
         aria-label={`View details for ${product.title}`}
-        className="rounded-t-xl focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-gray-900"
+        className="rounded-t-xl focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-brand"
       >
         <img
           src={product.thumbnail}
           alt={product.title}
-          className="h-48 w-full bg-gray-50 object-contain p-4"
+          className="h-48 w-full bg-page object-contain p-4"
           loading={priority ? 'eager' : 'lazy'}
           fetchPriority={priority ? 'high' : 'auto'}
         />
 
-        <h2 className="line-clamp-2 min-h-12 px-4 font-semibold text-gray-900 hover:underline">
+        <h2 className="line-clamp-2 min-h-12 px-4 font-semibold text-text-primary hover:underline">
           {product.title}
         </h2>
       </Link>
 
       <div className="flex flex-1 flex-col p-4">
         <div className="flex flex-wrap items-baseline gap-2">
-          <span className="text-lg font-bold text-gray-900">
+          <span className="text-lg font-bold text-text-primary">
             {formatPrice(finalPrice)}
           </span>
 
@@ -54,7 +54,7 @@ function ProductCard({
           )}
         </div>
 
-        <p className="mt-2 text-sm text-gray-600">
+        <p className="mt-2 text-sm text-text-secondary">
           Rating: {product.rating.toFixed(1)} / 5
         </p>
 
@@ -76,7 +76,7 @@ function ProductCard({
           type="button"
           disabled={isOutOfStock}
           onClick={() => onAddToCart(product)}
-          className="mt-auto min-h-11 w-full rounded-lg bg-gray-900 px-4 py-2 font-medium text-white transition hover:bg-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-600"
+          className="mt-auto min-h-11 w-full rounded-lg bg-brand px-4 py-2 font-medium text-white transition hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-text-secondary"
         >
           {isOutOfStock ? 'Unavailable' : 'Add to cart'}
         </button>

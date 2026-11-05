@@ -64,13 +64,13 @@ function LoginPage() {
       <div className="mx-auto w-full max-w-md">
         <Link
           to="/products"
-          className="mb-4 inline-flex min-h-11 items-center rounded-lg bg-gray-900 px-5 py-3 font-medium text-white hover:bg-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
+          className="mb-4 inline-flex min-h-11 items-center rounded-lg bg-brand px-5 py-3 font-medium text-white hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
         >
           Back to catalog
         </Link>
 
-        <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
-          <h1 className="mb-6 text-2xl font-bold text-gray-900">
+        <section className="rounded-xl border border-border-default bg-surface p-6 shadow-sm sm:p-8">
+          <h1 className="mb-6 text-2xl font-bold text-text-primary">
             Log in
           </h1>
 
@@ -100,7 +100,7 @@ function LoginPage() {
                 aria-describedby={
                   errors.username ? 'username-error' : undefined
                 }
-                className="min-h-11 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 outline-none focus:border-gray-900 focus:ring-2 focus:ring-gray-200"
+                className="min-h-11 w-full rounded-lg border border-gray-300 px-3 py-2 text-text-primary outline-none focus:border-brand focus:ring-2 focus:ring-gray-200"
               />
 
               {errors.username && (
@@ -139,7 +139,7 @@ function LoginPage() {
                 aria-describedby={
                   errors.password ? 'password-error' : undefined
                 }
-                className="min-h-11 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 outline-none focus:border-gray-900 focus:ring-2 focus:ring-gray-200"
+                className="min-h-11 w-full rounded-lg border border-gray-300 px-3 py-2 text-text-primary outline-none focus:border-brand focus:ring-2 focus:ring-gray-200"
               />
 
               {errors.password && (
@@ -155,7 +155,7 @@ function LoginPage() {
 
             <button
               type="submit"
-              className="min-h-11 w-full rounded-lg bg-gray-900 px-4 py-3 font-medium text-white transition hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
+              className="min-h-11 w-full rounded-lg bg-brand px-4 py-3 font-medium text-white transition hover:bg-brand-hover focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
             >
               Log In
             </button>

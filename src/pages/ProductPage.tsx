@@ -69,13 +69,13 @@ function ProductPage() {
     <PageContainer>
       <Link
         to="/"
-        className="mb-4 inline-flex min-h-11 items-center rounded-lg bg-gray-900 px-5 py-3 font-medium text-white hover:bg-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
+        className="mb-4 inline-flex min-h-11 items-center rounded-lg bg-brand px-5 py-3 font-medium text-white hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
       >
         Back to catalog
       </Link>
 
       {isLoading && (
-        <p role="status" className="text-gray-600">
+        <p role="status" className="text-text-secondary">
           Loading product...
         </p>
       )}
@@ -84,21 +84,21 @@ function ProductPage() {
         <section className="py-12 text-center">
           {error === 'Product not found.' ? (
             <>
-              <h1 className="text-2xl font-bold text-gray-900">
+              <h1 className="text-2xl font-bold text-text-primary">
                 Page not found
               </h1>
 
-              <p role="alert" className="mt-3 text-gray-600">
+              <p role="alert" className="mt-3 text-text-secondary">
                 The product you are looking for does not exist.
               </p>
             </>
           ) : (
             <>
-              <h1 className="text-2xl font-bold text-gray-900">
+              <h1 className="text-2xl font-bold text-text-primary">
                 Unable to load product
               </h1>
 
-              <p role="alert" className="mt-3 text-gray-600">
+              <p role="alert" className="mt-3 text-text-secondary">
                 {error}
               </p>
             </>
@@ -109,7 +109,7 @@ function ProductPage() {
       {!isLoading && product && (
         <section className="grid grid-cols-1 gap-8 md:grid-cols-2">
           <div>
-            <div className="flex h-80 items-center justify-center rounded-xl bg-white p-4">
+            <div className="flex h-80 items-center justify-center rounded-xl bg-surface p-4">
               <img
                 src={product.images[selectedImage] ?? product.thumbnail}
                 alt={product.title}
@@ -126,9 +126,9 @@ function ProductPage() {
                     onClick={() => setSelectedImage(index)}
                     aria-label={`View image ${index + 1} of ${product.title}`}
                     aria-pressed={selectedImage === index}
-                    className={`flex h-20 w-20 items-center justify-center rounded-lg border p-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 ${selectedImage === index
+                    className={`flex h-20 w-20 items-center justify-center rounded-lg border p-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand ${selectedImage === index
                       ? 'border-gray-900'
-                      : 'border-gray-200'
+                      : 'border-border-default'
                       }`}
                   >
                     <img
@@ -144,21 +144,21 @@ function ProductPage() {
           </div>
 
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">
+            <h1 className="text-2xl font-bold text-text-primary">
               {product.title}
             </h1>
 
-            <p className="mt-4 text-gray-600">{product.description}</p>
+            <p className="mt-4 text-text-secondary">{product.description}</p>
 
-            <p className="mt-4 text-lg font-semibold text-gray-900">
+            <p className="mt-4 text-lg font-semibold text-text-primary">
               {formatPrice(discountedPrice(product.price, product.discountPercentage))}
             </p>
 
-            <p className="mt-2 text-sm text-gray-600">
+            <p className="mt-2 text-sm text-text-secondary">
               Rating: {product.rating.toFixed(1)} / 5
             </p>
 
-            <p className="mt-2 text-sm text-gray-600">
+            <p className="mt-2 text-sm text-text-secondary">
               {product.stock === 0
                 ? 'Out of stock'
                 : product.stock <= 5
@@ -167,7 +167,7 @@ function ProductPage() {
             </p>
 
             <div className="mt-6">
-              <p className="mb-2 text-sm font-medium text-gray-900">
+              <p className="mb-2 text-sm font-medium text-text-primary">
                 Quantity
               </p>
 
@@ -217,13 +217,13 @@ function ProductPage() {
                         : 'No additional stock available.',
                     );
                   }}
-                  className="mt-5 min-h-11 w-full rounded-lg bg-gray-900 px-5 py-3 font-medium text-white hover:bg-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-600"
+                  className="mt-5 min-h-11 w-full rounded-lg bg-brand px-5 py-3 font-medium text-white hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-text-secondary"
                 >
                   Add to cart
                 </button>
 
                 {cartMessage && (
-                  <p role="status" className="mt-3 text-sm text-gray-600">
+                  <p role="status" className="mt-3 text-sm text-text-secondary">
                     {cartMessage}
                   </p>
                 )}

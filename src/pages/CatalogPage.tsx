@@ -69,7 +69,7 @@ function CatalogPage() {
   if (isLoading) {
     return (
       <PageContainer>
-        <p role="status" className="text-gray-600">
+        <p role="status" className="text-text-secondary">
           Loading products...
         </p>
       </PageContainer>
@@ -89,14 +89,14 @@ function CatalogPage() {
   if (products.length === 0) {
     return (
       <PageContainer>
-        <p className="text-gray-600">No products found.</p>
+        <p className="text-text-secondary">No products found.</p>
       </PageContainer>
     );
   }
 
   return (
     <PageContainer>
-      <h1 className="mb-6 text-3xl font-bold text-gray-900">
+      <h1 className="mb-6 text-3xl font-bold text-text-primary">
         Products
       </h1>
 
@@ -109,7 +109,7 @@ function CatalogPage() {
         <div
           role="status"
           aria-live="polite"
-          className="fixed top-10 right-13 z-50 max-w-sm rounded-lg bg-gray-900 px-5 py-4 text-sm text-white shadow-lg"
+          className="fixed top-10 right-13 z-50 max-w-sm rounded-lg bg-brand px-5 py-4 text-sm text-white shadow-lg"
         >
           {cartMessage}
         </div>

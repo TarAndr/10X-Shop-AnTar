@@ -23,17 +23,17 @@ function CartPage() {
             {checkoutMessage}
           </p>
         )}
-        <h1 className="text-3xl font-bold text-gray-900">
+        <h1 className="text-3xl font-bold text-text-primary">
           Shopping cart
         </h1>
 
-        <p className="mt-8 text-gray-600">
+        <p className="mt-8 text-text-secondary">
           Your cart is empty.
         </p>
 
         <Link
           to="/"
-          className="mt-4 inline-flex min-h-11 items-center rounded-lg bg-gray-900 px-5 py-3 font-medium text-white hover:bg-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
+          className="mt-4 inline-flex min-h-11 items-center rounded-lg bg-brand px-5 py-3 font-medium text-white hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
         >
           Browse products
         </Link>
@@ -43,7 +43,7 @@ function CartPage() {
 
   return (
     <PageContainer>
-      <h1 className="text-3xl font-bold text-gray-900">
+      <h1 className="text-3xl font-bold text-text-primary">
         Shopping cart
       </h1>
 
@@ -64,7 +64,7 @@ function CartPage() {
             return (
               <article
                 key={item.productId}
-                className="flex flex-col gap-4 rounded-xl border border-gray-200 p-4 sm:flex-row"
+                className="flex flex-col gap-4 rounded-xl border border-border-default p-4 sm:flex-row"
               >
                 <Link
                   to={`/products/${item.productId}`}
@@ -81,12 +81,12 @@ function CartPage() {
                 <div className="min-w-0 flex-1">
                   <Link
                     to={`/products/${item.productId}`}
-                    className="font-semibold text-gray-900 hover:underline"
+                    className="font-semibold text-text-primary hover:underline"
                   >
                     {item.title}
                   </Link>
 
-                  <p className="mt-2 text-sm text-gray-600">
+                  <p className="mt-2 text-sm text-text-secondary">
                     Price per item: {formatPrice(unitPrice)}
                   </p>
 
@@ -147,7 +147,7 @@ function CartPage() {
                   <p className="text-sm text-gray-500">
                     Item total
                   </p>
-                  <p className="mt-1 font-semibold text-gray-900">
+                  <p className="mt-1 font-semibold text-text-primary">
                     {formatPrice(lineTotal)}
                   </p>
                 </div>
@@ -156,24 +156,24 @@ function CartPage() {
           })}
         </section>
 
-        <aside className="rounded-xl border border-gray-200 p-5 lg:sticky lg:top-6">
-          <h2 className="text-xl font-semibold text-gray-900">
+        <aside className="rounded-xl border border-border-default p-5 lg:sticky lg:top-6">
+          <h2 className="text-xl font-semibold text-text-primary">
             Order summary
           </h2>
 
-          <div className="mt-5 flex items-center justify-between gap-4 text-gray-600">
+          <div className="mt-5 flex items-center justify-between gap-4 text-text-secondary">
             <span>Subtotal</span>
             <span>{formatPrice(subtotal)}</span>
           </div>
 
-          <div className="mt-3 flex items-center justify-between gap-4 border-t border-gray-200 pt-4 font-semibold text-gray-900">
+          <div className="mt-3 flex items-center justify-between gap-4 border-t border-border-default pt-4 font-semibold text-text-primary">
             <span>Total</span>
             <span>{formatPrice(subtotal)}</span>
           </div>
 
           <Link
             to="/checkout"
-            className="mt-6 flex min-h-11 w-full items-center justify-center rounded-lg bg-gray-900 px-5 py-3 text-center font-medium text-white hover:bg-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
+            className="mt-6 flex min-h-11 w-full items-center justify-center rounded-lg bg-brand px-5 py-3 text-center font-medium text-white hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
           >
             Proceed to checkout
           </Link>

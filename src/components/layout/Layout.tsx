@@ -4,7 +4,7 @@ import Footer from './Footer';
 
 function Layout() {
   return (
-    <div className="flex min-h-screen flex-col bg-gray-50 text-gray-900">
+    <div className="flex min-h-screen flex-col bg-page text-text-primary">
       <Header />
 
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-2">
