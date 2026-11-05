@@ -70,6 +70,7 @@ Updated the cart subtotal calculation to use the shared `discountedPrice()` util
 
 Monetary calculations must use a consistent rounding strategy across item subtotals, order summaries, and final totals to prevent discrepancies.
 
+---
 
 ### Bug 3 — Login state is lost after page reload
 
@@ -105,3 +106,41 @@ Updated `AuthContext` to initialize the authentication state from `localStorage`
 **Lesson learned**
 
 React Context provides shared application state but does not persist it across full page reloads. When persistence is required, the application must explicitly restore the necessary state from a persistent storage mechanism.
+
+### Bug 4 — Incorrect error handling on the product page
+
+**Symptom**
+
+When the network connection was unavailable, the product page displayed a "Page not found" message instead of indicating that the product could not be loaded. The same message was used for both missing products and request failures.
+
+**Steps to reproduce**
+
+1. Open the application with an active network connection.
+2. Navigate to an existing product page.
+3. Disable the network connection.
+4. Reload the product page or navigate to another existing product.
+5. Observe that the page displays "Page not found" and "The product you are looking for does not exist."
+
+**Evidence**
+
+During manual testing with the network connection disabled, the catalog displayed "Unable to load products. Please try again.", while the product page displayed "Page not found". Inspection of `ProductPage.tsx` revealed that every request failure was handled identically, without checking the error type or HTTP status. The original behavior was therefore inconsistent between the catalog and product pages.
+
+**Root cause**
+
+The `catch` block in `ProductPage.tsx` treated all request failures as product-not-found errors. It did not distinguish HTTP 404 responses from network failures or other server errors.
+
+**Fix**
+
+Imported `ApiError` from `api-client.ts` and updated the error handling logic to check the HTTP status. A 404 response is now treated as a missing product, while network failures and other request errors display "Unable to load product" with an appropriate error message.
+
+**Fix commit**
+
+`fix: distinguish product not found from API errors`
+
+[View commit](https://github.com/TarAndr/10X-Shop-AnTar/commit/7f103ee12139ff34edd4d247d4d4d03bb8683b69)
+
+**Lesson learned**
+
+HTTP errors and network failures represent different conditions and should not be handled as equivalent cases. Error handling should distinguish between a resource that does not exist and a resource that could not be retrieved because of a communication or server failure.
+
+---
