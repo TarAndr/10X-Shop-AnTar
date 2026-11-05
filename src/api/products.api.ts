@@ -1,3 +1,4 @@
+// products.api.ts
 import type { Product, ProductsResponse } from '../types';
 import { apiClient } from './api-client';
 
@@ -6,13 +7,19 @@ const API_URL = 'https://dummyjson.com/products';
 interface FetchProductsParams {
   limit?: number;
   skip?: number;
+  category?: string;
 }
 
 export async function fetchProducts({
   limit = 12,
   skip = 0,
+  category,
 }: FetchProductsParams = {}): Promise<ProductsResponse> {
-  const url = new URL(API_URL);
+  const endpoint = category
+    ? `${API_URL}/category/${encodeURIComponent(category)}`
+    : API_URL;
+
+  const url = new URL(endpoint);
 
   url.searchParams.set('limit', String(limit));
   url.searchParams.set('skip', String(skip));
@@ -54,4 +61,19 @@ export async function fetchProductById(id: number): Promise<Product> {
   }
 
   return data as Product;
+}
+
+export async function fetchProductCategories(): Promise<string[]> {
+  const data: unknown = await apiClient.get(
+    `${API_URL}/category-list`,
+  );
+
+  if (
+    !Array.isArray(data) ||
+    !data.every((category) => typeof category === 'string')
+  ) {
+    throw new Error('Invalid categories response');
+  }
+
+  return data;
 }

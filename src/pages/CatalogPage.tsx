@@ -1,6 +1,7 @@
+// CatalogPage.tsx
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router';
-import { fetchProducts } from '../api/products.api';
+import { fetchProducts, fetchProductCategories } from '../api/products.api';
 import type { Product } from '../types';
 import { useCart } from '../context/CartContext';
 import ProductGrid from '../components/ProductGrid';
@@ -16,6 +17,9 @@ function CatalogPage() {
   const [toastVisible, setToastVisible] = useState(false);
   const { addItem } = useCart();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [categories, setCategories] = useState<string[]>([]);
+  const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
+  const [categoriesError, setCategoriesError] = useState<string | null>(null);
 
   const requestedPage = Number(searchParams.get('page') ?? '1');
 
@@ -23,6 +27,61 @@ function CatalogPage() {
     Number.isInteger(requestedPage) && requestedPage > 0
       ? requestedPage
       : 1;
+
+  const selectedCategory = searchParams.get('category') ?? '';
+
+  useEffect(() => {
+    let isActive = true;
+
+    async function loadCategories() {
+      try {
+        const data = await fetchProductCategories();
+
+        if (isActive) {
+          setCategories(data);
+        }
+      } catch {
+        if (isActive) {
+          setCategoriesError('Unable to load product categories.');
+        }
+      } finally {
+        if (isActive) {
+          setIsCategoriesLoading(false);
+        }
+      }
+    }
+
+    void loadCategories();
+
+    return () => {
+      isActive = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (
+      isCategoriesLoading ||
+      categoriesError ||
+      !selectedCategory ||
+      categories.includes(selectedCategory)
+    ) {
+      return;
+    }
+
+    const nextParams = new URLSearchParams(searchParams);
+
+    nextParams.delete('category');
+    nextParams.delete('page');
+
+    setSearchParams(nextParams, { replace: true });
+  }, [
+    categories,
+    categoriesError,
+    isCategoriesLoading,
+    searchParams,
+    selectedCategory,
+    setSearchParams,
+  ]);
 
   useEffect(() => {
     const pageParam = searchParams.get('page');
@@ -87,17 +146,19 @@ function CatalogPage() {
 
   useEffect(() => {
     let isActive = true;
+    if (isCategoriesLoading) return;
 
     async function loadProducts() {
       setIsLoading(true);
       setError(null);
+      setTotal(0);
 
       try {
         const data = await fetchProducts({
           limit: PAGE_SIZE,
           skip: (currentPage - 1) * PAGE_SIZE,
+          category: selectedCategory || undefined,
         });
-
         if (isActive) {
           setProducts(data.products);
           setTotal(data.total);
@@ -118,7 +179,7 @@ function CatalogPage() {
     return () => {
       isActive = false;
     };
-  }, [currentPage]);
+  }, [currentPage, selectedCategory, isCategoriesLoading]);
 
   function handlePageChange(page: number) {
     const nextParams = new URLSearchParams(searchParams);
@@ -152,24 +213,65 @@ function CatalogPage() {
     );
   }
 
-  if (products.length === 0) {
-    return (
-      <PageContainer>
-        <p className="text-text-secondary">No products found.</p>
-      </PageContainer>
-    );
-  }
-
   return (
     <PageContainer>
       <h1 className="mb-6 text-3xl font-bold text-text-primary">
         Products
       </h1>
 
-      <ProductGrid
-        products={products}
-        onAddToCart={handleAddToCart}
-      />
+      <div className="mb-6 flex flex-col items-center gap-3 md:flex-row">
+        <label
+          htmlFor="category-filter"
+          className="mb-2 block text-sm font-medium text-text-primary"
+        >
+          Category
+        </label>
+
+        <select
+          id="category-filter"
+          value={selectedCategory}
+          onChange={(event) => {
+            const nextParams = new URLSearchParams(searchParams);
+
+            if (event.target.value) {
+              nextParams.set('category', event.target.value);
+            } else {
+              nextParams.delete('category');
+            }
+
+            nextParams.delete('page');
+
+            setSearchParams(nextParams);
+          }}
+          disabled={isCategoriesLoading || Boolean(categoriesError)}
+          className="w-full max-w-xs cursor-pointer rounded-lg border border-border-default bg-surface px-4 py-2 text-sm text-text-primary outline-none transition-colors hover:border-brand focus:border-brand disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          <option value="">All categories</option>
+
+          {categories.map((category) => (
+            <option key={category} value={category}>
+              {category
+                .replaceAll('-', ' ')
+                .replace(/\b\w/g, (letter) => letter.toUpperCase())}
+            </option>
+          ))}
+        </select>
+
+        {categoriesError && (
+          <p role="alert" className="mt-2 text-sm text-red-600">
+            {categoriesError}
+          </p>
+        )}
+      </div>
+
+      {products.length > 0 ? (
+        <ProductGrid
+          products={products}
+          onAddToCart={handleAddToCart}
+        />
+      ) : (
+        <p className="text-text-secondary">No products found.</p>
+      )}
 
       {totalPages > 1 && (
         <nav
