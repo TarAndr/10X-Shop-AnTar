@@ -14,7 +14,7 @@ function NotFoundPage() {
         </p>
 
         <Link
-          to="/"
+          to="/products"
           className="mt-6 inline-flex min-h-11 items-center justify-center rounded-lg bg-brand px-5 py-2 font-medium text-white transition hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
         >
           Go to catalog

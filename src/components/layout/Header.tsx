@@ -58,7 +58,7 @@ function Header() {
 
           <ul className="flex flex-wrap items-center gap-1">
             <li>
-              <NavLink to="/" className={navLinkClass}>
+              <NavLink to="/products" className={navLinkClass}>
                 Products
               </NavLink>
             </li>

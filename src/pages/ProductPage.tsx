@@ -68,7 +68,7 @@ function ProductPage() {
   return (
     <PageContainer>
       <Link
-        to="/"
+        to="/products"
         className="mb-4 inline-flex min-h-11 items-center rounded-lg bg-brand px-5 py-3 font-medium text-white hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
       >
         Back to catalog

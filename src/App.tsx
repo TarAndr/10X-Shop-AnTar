@@ -33,16 +33,16 @@ function App() {
             >
               <Routes>
                 <Route element={<Layout />}>
-                  <Route index element={<CatalogPage />} />
                   <Route
-                    path="products"
-                    element={<Navigate to="/" replace />}
+                    index
+                    element={<Navigate to="/products" replace />}
                   />
-                  <Route path="/products/:id" element={<ProductPage />} />
+                  <Route path="products" element={<CatalogPage />} />
+                  <Route path="products/:id" element={<ProductPage />} />
                   <Route path="cart" element={<CartPage />} />
                   <Route path="login" element={<LoginPage />} />
                   <Route
-                    path="/checkout"
+                    path="checkout"
                     element={
                       <ProtectedRoute>
                         <CheckoutPage />
