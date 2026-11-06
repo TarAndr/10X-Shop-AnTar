@@ -1,185 +1,250 @@
-# PLAN.md — 10X Shop (Graduation Project)
+# 10X Shop — Project Plan
 
-> Individual graduation project, 10X Front-end course. Plan written on **22 Oct 2026**, before any feature code.
-> Repository: `10x-shop-AnTar` · Stack: Vite, React 19, TypeScript (strict), React Router, Tailwind CSS v4, DummyJSON API.
+**Project period:** 17 October–6 November 2026
+**Original plan version:** 1.1, revised 22 October 2026
+**Implementation status updated:** 7 November 2026
+**CORE target:** 31 October 2026
+**Final repository deadline:** 6 November 2026, 23:59 Georgia time
 
-## 1. Goal and scope
+## 1. Project objective
 
-**Goal.** Build "10X Shop", an online-shop SPA: browse products, view details, manage a cart, log in (simulated) and place an order (simulated). The app must work, be deployed, and I must be able to explain every part of the code at the defense.
+Build and deploy a responsive single-page online shop using React, TypeScript, Tailwind CSS v4, and the DummyJSON API.
 
-**Priority rule.** CORE first and fully finished. FULL only after the CORE checklist is green. BONUS is not planned.
+The original plan was revised on 22 October 2026 to reflect the remaining project time. The overall project period remained 17 October–6 November. Tasks from 17–21 October were not to be marked complete unless the repository confirmed that they had been done.
 
-**Hard rules from the PRD that shape the plan**
-- Login is a local simulation: React Context only, no real auth, no external auth API. Any non-empty username and a password of 6+ characters are accepted.
-- Checkout is a local simulation: controlled form, no payment, no card fields, no `POST /carts/add`.
-- No libraries beyond what CORE needs (no form libraries, no state libraries, no UI kits).
-- `any` is forbidden; `npm run typecheck` must report 0 errors.
-- UI text is in English.
-- If the spec is ambiguous or contradicts itself, the CORE/FULL definition wins; if still unclear, ask before building.
+This document preserves the original scope, estimates, work breakdown structure, schedule, and risk assessment. The implementation results section records which planned features were actually delivered and which remained outside the completed project scope.
 
-### Scope per module
+## 2. Scope by module: CORE and FULL
 
-| Module | CORE (must have, pass threshold) | FULL (only if time remains) |
-|---|---|---|
-| **React** | Functional components, props, `children` composition, `useState`/`useEffect` (with correct deps), `map` + stable `key`, controlled Login/Checkout forms, React Router, AuthContext, CartContext with immutable updates, conditional rendering, lifting state up | Custom hooks (`useDebounce`, `useFetch`), `useReducer` cart, Search/Category/Sort/Pagination with URL state, Reviews, Related products, Promo code, Orders, Profile, Toasts |
-| **TypeScript** | `strict`, types for `Product`, `ProductsResponse`, `CartItem`/`CartState`, `AuthUser`, Login and Checkout form values; Props interfaces; `typecheck` = 0; ESLint with `no-explicit-any` | Generics, `ApiClient`/`ApiError`, OOP classes, type guards, discriminated unions, utility types |
-| **Tailwind CSS v4** | `@tailwindcss/vite` + `@import "tailwindcss"`, utility styling on Header/ProductCard/Catalog/Product/Cart, Flex/Grid, mobile-first responsive (`md:` changes the grid), `hover:`/`focus:`/`disabled:` | `@theme` token, `@layer`, dark mode |
-| **Optimization** | Responsive at 375 px / tablet / desktop with no horizontal scroll, Error Boundary, `DEBUG-LOG.md` (3+ real bugs), loading/error/empty states, Lighthouse before/after report, Chrome + Firefox check | `React.lazy` routes, memoization after profiling, Safari/Edge, a11y audit |
-| **Practical project** | Public repo, real Git history, `README.md` (EN), `PLAN.md`, `REPORT.md`, deploy (Vercel/Netlify) with SPA rewrite | GitHub Issues (20+) and Project board, PRs, weekly progress notes, demo video |
+The following matrix describes the original planned scope. CORE represented the required implementation baseline. FULL contained additional features to be considered only after CORE was stable.
 
-### Routes (CORE)
+| Module             | CORE — required first                                                                                                                                                           | FULL — only after CORE is stable                                                                    |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| Setup / TypeScript | Vite, React, TypeScript strict mode; scripts `dev`, `build`, `preview`, `typecheck`, `lint`; typed props, state, and API data                                                   | Advanced generics, OOP patterns, complex custom hooks                                               |
+| Layout / routing   | Shared layout, navigation, React Router, required routes and 404                                                                                                                | Lazy route loading and advanced route optimization                                                  |
+| Auth               | Controlled Login form, local simulated authentication with Context; protect Checkout and return after login                                                                     | Expanded auth flow and profile management                                                           |
+| Catalog            | DummyJSON products, typed response, loading/error/empty states, reusable cards/grid, stable `key`                                                                               | Search/debounce, filters, sorting, pagination, and URL-backed filter state                          |
+| Product            | Product route by ID, invalid/missing ID handling, quantity and Add to Cart                                                                                                      | Reviews and related products                                                                        |
+| Cart               | Shared Cart Context, immutable add/update/remove, item count and correct totals                                                                                                 | Advanced persistence or cart rules beyond CORE                                                      |
+| Checkout           | Controlled required fields, validation, local simulated confirmation, clear cart after success; no real payment                                                                 | Promo codes, order history, and detailed order pages                                                |
+| Orders / Profile   | Not required for CORE unless a specific PRD CORE criterion says otherwise                                                                                                       | Orders list/details, status progression, reorder, profile                                           |
+| Responsive UI      | Mobile ≤480px, tablet 481–1024px, desktop >1024px; all implemented pages usable at 375px without horizontal scrolling; hover/focus/disabled states; touch targets at least 44px | Cross-browser matrix and formal accessibility audit                                                 |
+| Quality            | Error Boundary class component using `getDerivedStateFromError` and `componentDidCatch`, fallback and Reload; at least 3 real bugs in `DEBUG-LOG.md`; typecheck/build pass      | 5 real bugs with varied categories; performance profiling and Lighthouse before/after               |
+| Docs / delivery    | English README, PLAN.md, REPORT.md; meaningful Git history; public repository; working Vercel/Netlify deployment and SPA route refresh                                          | GitHub Projects board, ≥20 labelled Issues, PR workflow, progress notes and expanded commit targets |
 
-`/` Catalog · `/products` (redirects to `/`) · `/login` · `/products/:id` · `/cart` · `/checkout` (guest is redirected to `/login`, then returned to `/checkout`) · `*` Not Found.
+**Original priority rule:** do not start FULL features until every CORE acceptance criterion is met. CORE deployment, responsive behaviour, Error Boundary, documentation, and genuine bug records are not optional.
 
-## 2. Timeline
+## 3. Work Breakdown Structure (WBS)
 
-| Week | Dates | Focus |
-|---|---|---|
-| 1 | 17–23 Oct | Setup, PLAN.md, types, Layout/Router, Auth + Login, Catalog |
-| 2 | 24–30 Oct | Product Details, CartContext, Cart, Checkout, order confirmation |
-| 3 | 31 Oct – 6 Nov | Responsive polish, states, Error Boundary, debugging log, deploy, docs, final QA |
+Estimates are focused-work estimates from the original plan. They are retained as planning estimates and should not be interpreted as actual time spent.
 
-**Fixed dates:** theory test **5 Nov** (30 questions, 45 min; React, TypeScript, Tailwind, optimization); repository submission **6 Nov, 23:59 (Georgia time)**; defense **7–8 Nov**. Commits after the deadline are not evaluated.
+| ID / Epic                | Tasks                                                                                                                                                             |     Estimate | Window | Definition of Done                                                                                                                             |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | -----------: | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| W1 Setup                 | Check Node/npm; create Vite React + TypeScript app; install Router and Tailwind v4; configure scripts and strict TS; verify run/build; create GitHub repo         |        2–3 h | 22 Oct | App starts; Tailwind styles render; required scripts work; initial meaningful commit exists                                                    |
+| W2 Planning              | Define scope, WBS, estimates, risks, and DoD in this plan before functional feature code                                                                          |      1–1.5 h | 22 Oct | `PLAN.md` is in repo root and committed; commit date reflects actual work                                                                      |
+| W3 App shell             | Folder structure, shared types, Layout/Header/Footer, routes and 404                                                                                              |        3–4 h | 23 Oct | Routes load directly; shared layout renders; unknown route shows 404; typecheck passes                                                         |
+| W4 Auth                  | Typed Auth Context; controlled Login; local login/logout; protect Checkout and redirect back after login                                                          |        3–4 h | 24 Oct | Login simulation works; guest is redirected; post-login redirect works; no real authentication is claimed                                      |
+| W5 Catalog               | Product/API types; fetch DummyJSON; loading/error/empty states; ProductCard/ProductGrid with props, `map()` and stable `key`                                      |        4–5 h | 25 Oct | Typed data renders; states work; cards navigate to details; no TS errors                                                                       |
+| W6 Product               | Fetch product by route ID; handle invalid ID/API errors; quantity selector; Add to Cart                                                                           |        3–4 h | 26 Oct | Valid and invalid product states work; quantity and Add to Cart work                                                                           |
+| W7 Cart state            | Cart Context and types; immutable add/update/remove; derive totals                                                                                                |        3–4 h | 27 Oct | Shared state is consistent; repeated products update quantity; totals and badge count are correct                                              |
+| W8 Cart page             | Items, empty state, quantity controls, remove action, subtotal/total and Checkout link                                                                            |        2–3 h | 28 Oct | Empty/populated cart work; totals stay synchronized; layout is responsive                                                                      |
+| W9 Checkout              | Controlled fields and required validation; simulated order confirmation; clear cart after success                                                                 |        3–4 h | 29 Oct | Invalid fields are blocked; valid form confirms order; cart clears after success; no real payment                                              |
+| W10 Integration / errors | Integrate main flow; class Error Boundary and fallback/Reload; test intentional render error during development                                                   |        3–4 h | 30 Oct | Main flow works; fallback is demonstrated; first genuine bug is logged                                                                         |
+| W11 CORE freeze / QA     | Check all implemented pages at 375px and desktop; interactive states, 404, route refresh, console and forms; record 3 genuine bugs and fixes                      |        4–5 h | 31 Oct | CORE checklist passes; no horizontal scroll at 375px; typecheck/build pass; ≥3 real bug entries include required evidence and fix commit links |
+| W12 CORE reserve         | Fix CORE blockers and regressions only                                                                                                                            |    Up to 4 h | 1 Nov  | No known CORE-blocking defects; no FULL features started                                                                                       |
+| W13 Documentation        | English README; update plan with actual status; REPORT with planned-vs-delivered scope, available metrics, difficult problems, lessons and AI-use summary         |        3–4 h | 2 Nov  | Docs match actual repository; setup instructions and commands are verified                                                                     |
+| W14 Deployment           | Deploy to Vercel/Netlify; configure SPA fallback/rewrite; test homepage and direct refresh on nested routes; add live URL to README                               |        2–3 h | 3 Nov  | Public site works; direct refresh on product/cart/checkout does not return host-level 404; repository is public                                |
+| W15 Final QA / defense   | Clean install; typecheck/build/lint; test main flows and console; rehearse Context, controlled forms, useEffect, types, immutable updates and responsive Tailwind |        3–4 h | 4 Nov  | Checks pass after clean install; key flows work; implementation can be explained                                                               |
+| W16 Theory test          | Sit 30-question, 45-minute test; only low-risk fixes afterward                                                                                                    | As scheduled | 5 Nov  | Test completed; project remains releasable                                                                                                     |
+| W17 Submission           | Verify repo URL, README, deployment, branch and final commit; submit before deadline                                                                              |          1 h | 6 Nov  | Correct public repo submitted by 23:59 Georgia time; no unsubmitted changes remain                                                             |
 
-**Buffer.** 5 Nov is kept free for test revision; 6 Nov is for deploy check and submission only. All CORE work must be finished by **4 Nov**.
+## 3.1. Implementation results
 
-## 3. Work breakdown (WBS)
+This section records the final implementation status and supplements the original plan. The status below reflects the delivered application, not merely the original feature intentions.
 
-Estimates are in hours and cover coding, testing and committing. Total CORE ≈ 57 h.
+### Implemented CORE functionality
 
-### Epic 1 — Setup & Docs foundation (week 1) — ~4 h
-| # | Task | Est. | Done when |
-|---|---|---|---|
-| 1.1 | Create public GitHub repo, first commit with this `PLAN.md` (before feature code) | 0.5 | PLAN.md commit predates feature commits |
-| 1.2 | Vite + React + TS template, strict `tsconfig`, scripts `dev`, `build`, `preview`, `typecheck`, `lint` | 1 | `npm run typecheck` and `npm run build` pass |
-| 1.3 | Tailwind CSS v4 via `@tailwindcss/vite` | 0.5 | A utility class visibly changes the UI |
-| 1.4 | ESLint (typescript-eslint, react-hooks, `no-explicit-any: error`) | 1 | `npm run lint` passes |
-| 1.5 | Folder structure (`api/ types/ context/ components/ pages/ routes/ utils/`) | 0.5 | Matches the structure in the spec |
-| 1.6 | Start `DEBUG-LOG.md` and `README.md` skeletons | 0.5 | Files exist, filled as I go |
+- React application built with Vite and TypeScript strict mode.
+- Tailwind CSS v4 configuration and responsive page layouts.
+- Shared application layout and navigation.
+- Product catalog loaded from the DummyJSON API.
+- Product detail pages with route-based product loading.
+- Shopping cart managed through React Context, with add, update, and remove operations.
+- Cart item count and calculated totals.
+- Simulated login using Context and local storage.
+- Protected Checkout route and redirect to the requested page after login.
+- Checkout form with validation and local order confirmation.
+- Cart clearing after successful simulated checkout.
+- Error Boundary with fallback and Reload action.
+- Loading, error, and empty states in the relevant application flows.
+- Persistent cart and simulated authentication state using local storage.
+- Public deployment and support for direct navigation to application routes.
 
-### Epic 2 — Types & Layout/Routing (week 1) — ~5 h
-| # | Task | Est. | Done when |
-|---|---|---|---|
-| 2.1 | Types in `types/`: `Product`, `ProductsResponse`, `CartItem`, `CartState`, `AuthUser`, `LoginFormValues`, `CheckoutFormValues` | 1 | No duplicate model definitions elsewhere |
-| 2.2 | `Layout` with `Header`, `<Outlet />`, `Footer`; `NavLink` active state | 1.5 | Header is written once |
-| 2.3 | Routes for all CORE paths + `NotFound` page | 1 | Navigation works without page reload |
-| 2.4 | `ScrollToTop` | 0.5 | New route opens at the top |
-| 2.5 | `utils/format.ts`: `formatPrice`, `discountedPrice` | 1 | Pure, typed functions |
+Authentication, checkout, and order processing are simulations. The application does not implement a real authentication service, backend order storage, or payment processing.
 
-### Epic 3 — Auth (week 1) — ~5 h
-| # | Task | Est. | Done when |
-|---|---|---|---|
-| 3.1 | `AuthContext`: `user`, `isLoggedIn`, `login(username)`, `logout()` | 1.5 | State shared via Context, no prop drilling |
-| 3.2 | Login page: controlled fields, `preventDefault`, validation (exact texts: `Username is required`, `Password is required`, `Password must be at least 6 characters`) | 2 | Invalid form does not submit |
-| 3.3 | `ProtectedRoute` for `/checkout`; redirect to `/login`, return to `/checkout` after login | 1 | Guest flow works end to end |
-| 3.4 | Header Log in / Log out; logout keeps the cart | 0.5 | Cart survives logout |
+### Implemented FULL functionality
 
-### Epic 4 — Catalog (week 1) — ~7 h
-| # | Task | Est. | Done when |
-|---|---|---|---|
-| 4.1 | `api/products.api.ts` with typed `fetchProducts` (`GET /products?limit=12&skip=0`) | 1 | Returns `ProductsResponse` |
-| 4.2 | `CatalogPage`: `useEffect`, loading / error / empty states | 2 | API failure does not crash the app |
-| 4.3 | `ProductCard` (thumbnail, title, price with discount, rating, stock badge, Add to cart) | 2.5 | Works for stock = 0, ≤ 5 and > 5 |
-| 4.4 | `ProductGrid` with `map` and `key = product.id`; card opens details | 1 | Responsive grid (1 / 2–3 / 4 columns) |
-| 4.5 | `children` composition (e.g. `PageContainer` or `Card`) | 0.5 | At least one real use of `props.children` |
+**Catalog functionality**
 
-### Epic 5 — Product details (week 2) — ~6 h
-| # | Task | Est. | Done when |
-|---|---|---|---|
-| 5.1 | `ProductPage`: `useParams`, `GET /products/:id`, loading / error | 2 | `/products/1` loads; `id` is in `useEffect` deps |
-| 5.2 | Invalid id (`abc`, `999999`) shows NotFound, no console crash | 1 | Both cases handled |
-| 5.3 | Image gallery (thumbnail switch via `useState`) and quantity stepper (1 ≤ qty ≤ stock) | 2 | Buttons disabled at the limits |
-| 5.4 | Stock status text and Add to cart | 1 | Item appears in the cart; no more than the stock |
+- Debounced product search.
+- Category filtering.
+- Product sorting by price, rating, discount, and title.
+- Pagination using the API's `limit` and `skip` parameters.
+- Synchronization of search, category, sorting, and pagination state with URL search parameters through `useSearchParams`.
+- Search requests sent to the DummyJSON search endpoint.
+- Request cancellation using `AbortController` when a request is no longer relevant.
+- Retry action for catalog loading errors.
+- Search, category, sorting, and pagination state can be represented in the URL and restored through navigation.
 
-### Epic 6 — Cart (week 2) — ~8 h
-| # | Task | Est. | Done when |
-|---|---|---|---|
-| 6.1 | `CartContext`: `addItem`, `removeItem`, `setQuantity`, `clear`, immutable updates, stock limit | 3 | State never mutated |
-| 6.2 | Persist cart in `localStorage` (`shop_cart`), safe `JSON.parse` | 1 | Cart survives refresh |
-| 6.3 | Cart page: list, quantity change, remove, subtotal/total, empty state | 3 | Totals update instantly |
-| 6.4 | Header badge = sum of quantities, hidden at 0 | 0.5 | Matches Cart page |
-| 6.5 | Clear cart with confirm | 0.5 | Asks before clearing |
+**API and data handling**
 
-### Epic 7 — Checkout (week 2) — ~7 h
-| # | Task | Est. | Done when |
-|---|---|---|---|
-| 7.1 | Checkout form: Full name, Email, Address, City, all controlled (`value`/`onChange`) | 2 | Errors appear next to the field |
-| 7.2 | Validation with exact texts (`Full name must be at least 3 characters`, `Please enter a valid email address`, `Address must be at least 5 characters`, `City is required`) | 1.5 | Invalid submit is blocked |
-| 7.3 | Order summary from the cart; empty cart redirects to `/cart` with a message | 1.5 | Total matches Cart page |
-| 7.4 | Place order: button disabled during submit, "Thank you! Your order has been placed.", summary shown, cart cleared, badge reset | 2 | Full flow works, no page reload |
+- Centralized API request handling through `ApiClient`.
+- Custom `ApiError` class for API request errors.
+- Generic `AsyncState<T>` type for asynchronous state representation.
+- Type guards for safer handling of external data and stored values.
+- Shared storage key definitions and guarded local storage access.
 
-### Epic 8 — Quality (weeks 2–3) — ~9 h
-| # | Task | Est. | Done when |
-|---|---|---|---|
-| 8.1 | Responsive pass on all pages at 375 px, tablet, desktop; burger or wrapped nav on mobile | 3 | No horizontal scroll; touch targets ≥ 44 px |
-| 8.2 | `hover:`, `focus:`, `disabled:` states on real buttons and inputs | 1 | Visible and demonstrable |
-| 8.3 | Error Boundary (class component, fallback "Something went wrong." + Reload) | 1 | Fallback shows when a component throws |
-| 8.4 | Loading / error / empty states checked on every data page (use DevTools Offline) | 1 | No crashes |
-| 8.5 | `DEBUG-LOG.md`: 3+ real bugs (symptom → reproduction → tool → root cause → fix commit → lesson) | 1.5 | Every entry links to a real commit |
-| 8.6 | Lighthouse (mobile, incognito) before/after + short table in REPORT.md; Chrome + Firefox check | 1.5 | Screenshots in `docs/` |
+**UI and application loading**
 
-### Epic 9 — Deploy, Docs, Submission (week 3) — ~6 h
-| # | Task | Est. | Done when |
-|---|---|---|---|
-| 9.1 | Deploy to Vercel/Netlify with SPA rewrite (`vercel.json` or `_redirects`) | 1.5 | `/products/5` opens directly and survives refresh |
-| 9.2 | Remove `console.log`; final `typecheck`, `lint`, `build` | 0.5 | All three pass |
-| 9.3 | `README.md` (EN): About, Features, Tech Stack, Architecture, How to Run, Scripts, Live Demo, Test Account, Credits | 1.5 | A stranger can run the project |
-| 9.4 | `REPORT.md`: planned vs delivered, metrics, 3 hardest problems, what I would change, AI-usage summary | 1.5 | Honest and matches the repo |
-| 9.5 | Full manual walkthrough: Catalog → Product → Cart → Login → Checkout → confirmation | 0.5 | Works on the live URL |
-| 9.6 | Final QA and submit the repo link | 0.5 | Sent before **6 Nov, 23:59** |
+- Tailwind CSS v4 theme tokens defined through `@theme`.
+- Route-level lazy loading using `React.lazy` and `Suspense`.
+- Toast notifications for relevant cart interactions.
+- Persistent vertical scrollbar to prevent horizontal layout shifts when the scrollbar would otherwise appear or disappear.
 
-### FULL backlog (only after CORE is green, in this order)
-1. Search with debounce, category filter, sort, pagination, URL state (`useSearchParams`).
-2. `useReducer` cart, promo code `10X10`, Toast.
-3. Reviews and Related products.
-4. `@theme` design token, dark mode.
-5. Orders and Profile pages.
-6. `React.lazy` routes, memoization (only after profiling), `ApiClient`/`ApiError`, type guards.
-7. Process extras: GitHub Issues (20+), PRs, `docs/progress/week-*.md`, demo video.
+### Planned functionality not implemented
 
-If FULL work is started, it goes into separate branches so CORE stays stable and deployable.
+The following items were considered in the original FULL scope but were not delivered in the final application:
 
-## 4. Risks
+- Custom `useDebounce` and `useFetch` hooks. Debouncing is implemented directly in the catalog logic; a separate reusable `useDebounce` hook was not created.
+- Cart state refactoring with `useReducer`.
+- Promo code functionality, including the planned `10X10` code.
+- Product reviews.
+- Related products.
+- Dark mode and theme switching.
+- Orders list, order details, and order history.
+- Profile management.
+- Memoization and performance optimization based on profiling.
+- A formal Safari/Edge cross-browser test matrix.
+- A separate formal accessibility audit.
+- GitHub Projects board, labelled Issues, PR workflow, weekly progress notes, and a demo video.
 
-| # | Risk | Impact | Mitigation |
-|---|---|---|---|
-| 1 | DummyJSON is slow or unavailable | Catalog and Product pages empty | Clear error state; keep a small local JSON fallback for development and demo; test with DevTools Offline |
-| 2 | Time runs out because the project starts late in week 1 | CORE incomplete | Strict CORE-first order; FULL is gated; all CORE finished by 4 Nov; cut anything not in the CORE checklist |
-| 3 | Theory test on 5 Nov takes preparation time | Less coding time | No new features after 3 Nov; 5 Nov reserved for revision |
-| 4 | SPA routes return 404 on refresh in production | Fails the deploy requirement | Add rewrite config at the first deploy (not at the end); test `/products/5` directly |
-| 5 | I cannot explain AI-generated code at the defense | Lost points regardless of a working app | Read and understand each piece before committing; keep notes on key decisions; practice explaining `useEffect` deps, Context, immutable updates, `interface` vs `type` |
-| 6 | Scope creep into FULL features | Unfinished CORE | Follow the priority rule; no extra libraries |
-| 7 | Cart state bugs (mutation, stale data, stock limits) | Wrong totals | Immutable updates only; test add / change / remove paths manually; log real bugs in `DEBUG-LOG.md` |
-| 8 | Missing the submission deadline | Work not evaluated | Submit on 6 Nov before 18:00, not at 23:59 |
+These items are not represented as completed features in the project documentation.
 
-## 5. Definition of Done
+### Final application routes
 
-**For every task**
-- Works in the browser with no console errors.
-- Typed correctly; no `any`; `npm run typecheck` = 0 errors.
-- Styled with Tailwind utilities; looks right at 375 px and on desktop.
-- Committed with a meaningful message (`feat:`, `fix:`, `refactor:`, `docs:`) and pushed.
-- I can explain the code in my own words.
+The final route configuration differs from the initial route proposal. The table below describes the implemented routing:
 
-**For CORE as a whole (final checklist)**
-- [X] `npm install && npm run typecheck && npm run build` succeed; `npm run lint` shows no `any`.
-- [X] Routes work: `/`, `/products` (redirect), `/login`, `/products/:id`, `/cart`, `/checkout`, `*`.
-- [X] Login validation and Context state work; guest is redirected from `/checkout` and returned after login.
-- [X] Catalog loads from DummyJSON with loading / error / empty states.
-- [X] Product details work; invalid id shows NotFound.
-- [X] Cart: add, change quantity, remove, totals; Header badge in sync.
-- [X] Checkout: controlled form, validation, order confirmation, cart cleared.
-- [X] Responsive at 375 px with no horizontal scroll; hover / focus / disabled states present.
-- [X] Error Boundary and `DEBUG-LOG.md` (3+ real bugs) done.
-- [X] Lighthouse before/after saved; Chrome + Firefox checked.
-- [X] Deployed; `/products/5` works on refresh; link is in README.
-- [X] `README.md` (EN), `PLAN.md`, `REPORT.md` in the repo; Git history is real and meaningful.
-- [X] Repository submitted before **6 Nov, 23:59**.
+| Route           | Behaviour                |
+| --------------- | ------------------------ |
+| `/`             | Redirects to `/products` |
+| `/products`     | Product catalog          |
+| `/products/:id` | Product details          |
+| `/cart`         | Shopping cart            |
+| `/login`        | Simulated login          |
+| `/checkout`     | Protected checkout       |
+| `*`             | Not Found page           |
 
-## 6. Decisions and open points
+## 4. Calendar schedule
 
-- **Checkout fields.** The spec contains leftover rows from an older 11-field schema (phone, postal code, country, card). By the spec's own priority rule, the CORE definition wins: **four fields** (Full name, Email, Address, City). No card fields at all.
-- **Login persistence.** Login remains a local simulation with no real authentication or backend API. The username is stored in `localStorage` (`shop_user`) so the simulated login state survives page reloads. No passwords or authentication tokens are stored. The cart is stored separately in `localStorage` (`shop_cart`).
-- **Data fetching.** Plain `fetch` inside `useEffect` or a small typed API function; no custom hook or `ApiClient` in CORE.
-- **Language of docs.** `PLAN.md` and `README.md` in English; `REPORT.md` in English for consistency.
-- **Test account in README.** `emilys / emilyspass` as the spec asks, with a note that any valid input works because Login is simulated.
+The following schedule preserves the original planning checkpoints. It is a record of the intended sequence of work, not a claim that every task was completed exactly on its planned date.
+
+| Date        | Main focus                         | Checkpoint                                                      |
+| ----------- | ---------------------------------- | --------------------------------------------------------------- |
+| 17–21 Oct   | Original project period            | Verify existing work; do not assume completion without evidence |
+| Thu, 22 Oct | Setup and commit `PLAN.md`         | App setup verified; plan committed before feature work          |
+| Fri, 23 Oct | App shell, types, routing          | Layout, routes and 404 work                                     |
+| Sat, 24 Oct | Login and Auth Context             | Controlled form and Checkout guard work                         |
+| Sun, 25 Oct | Catalog and API states             | Typed catalog loads and handles errors                          |
+| Mon, 26 Oct | Product details                    | Product route and Add to Cart work                              |
+| Tue, 27 Oct | Cart Context and calculations      | Shared immutable state and correct totals                       |
+| Wed, 28 Oct | Cart page                          | Empty and populated cart work                                   |
+| Thu, 29 Oct | Checkout                           | Validation and simulated confirmation work                      |
+| Fri, 30 Oct | Integration and Error Boundary     | Main flow and fallback verified                                 |
+| Sat, 31 Oct | CORE freeze and responsive QA      | CORE complete; ≥3 genuine bug records                           |
+| Sun, 1 Nov  | CORE reserve                       | Fix blockers/regressions only                                   |
+| Mon, 2 Nov  | README, PLAN update, REPORT        | Documentation matches delivered work                            |
+| Tue, 3 Nov  | Deployment / production QA         | Live URL and nested-route refresh verified                      |
+| Wed, 4 Nov  | Final checks and defense rehearsal | Typecheck/build/lint and key flows pass                         |
+| Thu, 5 Nov  | Theoretical test                   | Test completed; no risky refactors                              |
+| Fri, 6 Nov  | Final submission                   | Submit by 23:59 Georgia time                                    |
+
+## 5. Risks and mitigations
+
+| Risk                                       | Warning sign / impact                                  | Mitigation and contingency                                                                                                                                                             |
+| ------------------------------------------ | ------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| DummyJSON unavailable or response differs  | Catalog/product page fails                             | Implement loading/error/empty states; inspect Network response; keep a small local JSON fixture as a development/test fallback if needed, clearly distinguishing it from live API data |
+| CORE slips past 31 Oct                     | Main user flow incomplete by 29–30 Oct                 | Prioritize the minimum complete user journey; stop FULL work; simplify visual polish before cutting required behaviour; use 1 Nov only for blockers                                    |
+| TypeScript or routing problems appear late | `typecheck` fails or deployed nested route returns 404 | Run typecheck after each vertical feature; test direct routes locally; reserve 3 Nov for SPA rewrite and production refresh checks                                                     |
+| Cart/checkout state becomes inconsistent   | Badge, quantity, total and confirmation disagree       | Keep shared cart logic in Context; use immutable updates and derived totals; test add/update/remove and empty-cart cases                                                               |
+| Responsive defects found at the end        | Horizontal scroll or unusable controls at 375px        | Check mobile during each page implementation; audit every implemented route at 375px and desktop                                                                                       |
+| Docs/deployment postponed                  | README missing or public site broken                   | Reserve 2–4 Nov for docs, deployment and QA; freeze features after CORE; verify links on 6 Nov                                                                                         |
+
+## 6. Project-wide Definition of Done
+
+A task is done only when its behaviour works, relevant loading/error/empty or validation states are handled, TypeScript types are appropriate, the UI remains usable at required viewport sizes, and the change is recorded in a meaningful Git commit. Rendering once is not sufficient evidence.
+
+CORE is ready only when all applicable CORE requirements in the PRD are implemented and checked, `npm run typecheck` and `npm run build` pass, responsive checks pass, Error Boundary behaviour is demonstrated, `DEBUG-LOG.md` contains at least 3 genuine bugs with the required evidence, and the application is deployed.
+
+For FULL features, completion is determined by the implementation results in Section 3.1. Features listed there as not implemented must not be presented as delivered functionality.
+
+## 7. Release checklist
+
+### CORE
+
+- [x] React + TypeScript strict mode and Tailwind CSS v4 configured
+- [x] `dev`, `build`, `preview`, `typecheck`, and `lint` scripts configured and used
+- [x] Required routes, shared layout, and 404 work
+- [x] Login uses controlled inputs and local simulated authentication
+- [x] Catalog uses DummyJSON, typed data, and loading/error/empty states
+- [x] Product details and Add to Cart work
+- [x] Cart add/update/remove, badge, and totals work
+- [x] Checkout validation and local confirmation work
+- [x] Error Boundary fallback and Reload implemented
+- [x] Implemented pages are usable at 375px without horizontal scrolling
+- [x] `DEBUG-LOG.md` contains genuine bugs with symptoms, reproduction details, root causes, fixes, and commit references
+- [x] Public repository and deployment are available
+- [x] Direct navigation and refresh on application routes are supported
+
+### FULL
+
+- [x] Debounced catalog search
+- [x] Category filtering
+- [x] Sorting by price, rating, discount, and title
+- [x] Pagination
+- [x] URL synchronization for catalog state
+- [x] Request cancellation with `AbortController`
+- [x] Catalog retry action
+- [x] Centralized `ApiClient` and `ApiError`
+- [x] Generic `AsyncState<T>` and type guards
+- [x] Tailwind `@theme` tokens
+- [x] Lazy route loading with `React.lazy` and `Suspense`
+- [x] Toast notifications for relevant cart interactions
+- [ ] Separate `useDebounce` and `useFetch` custom hooks
+- [ ] Cart state refactoring with `useReducer`
+- [ ] Promo codes
+- [ ] Product reviews
+- [ ] Related products
+- [ ] Dark mode
+- [ ] Orders and profile pages
+- [ ] Profiling-based memoization
+- [ ] Formal Safari/Edge test matrix
+- [ ] Separate formal accessibility audit
+- [ ] GitHub Projects board, Issues, and PR workflow
+- [ ] Weekly progress notes and demo video
+
+### Documentation and submission
+
+- [x] `README.md` updated to describe the implemented application
+- [x] `PLAN.md` updated with implementation results
+- [x] `REPORT.md` finalized and checked against the repository
+- [x] Public repository has meaningful Git history
+- [x] Deployment works, including direct refresh on nested routes
+- [x] Repository submitted by 6 November 2026, 23:59 Georgia time
+
+## 8. Scope control and honesty of progress
+
+The original scope-control rule required CORE to be stable before starting FULL-only search/debounce, filters, sorting, pagination, Orders/Profile, reviews/related products, promo codes, theme switching, lazy routes, Lighthouse before/after, advanced generics/OOP, or complex custom hooks.
+
+After CORE completion, selected FULL features were implemented according to the available time and project priorities. The final delivered scope is recorded in Section 3.1 and the release checklist.
+
+The project documentation must distinguish between planned, implemented, and unimplemented functionality. Do not claim that a feature was completed unless it exists in the repository and its behaviour has been verified. Do not backdate commits or claim that tasks were completed when they were not.
