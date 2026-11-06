@@ -9,6 +9,37 @@ import PageContainer from '../components/layout/PageContainer';
 
 const PAGE_SIZE = 12;
 
+type SortField = 'price' | 'rating' | 'discountPercentage' | 'title';
+type SortOrder = 'asc' | 'desc';
+type SortOption = `${SortField}-${SortOrder}`;
+
+const DEFAULT_SORT_ORDER: Record<SortField, SortOrder> = {
+  price: 'asc',
+  rating: 'desc',
+  discountPercentage: 'desc',
+  title: 'asc',
+};
+
+const SORT_OPTIONS = {
+  'price-asc': { sortBy: 'price', order: 'asc' },
+  'price-desc': { sortBy: 'price', order: 'desc' },
+  'rating-asc': { sortBy: 'rating', order: 'asc' },
+  'rating-desc': { sortBy: 'rating', order: 'desc' },
+  'discountPercentage-asc': {
+    sortBy: 'discountPercentage',
+    order: 'asc',
+  },
+  'discountPercentage-desc': {
+    sortBy: 'discountPercentage',
+    order: 'desc',
+  },
+  'title-asc': { sortBy: 'title', order: 'asc' },
+  'title-desc': { sortBy: 'title', order: 'desc' },
+} as const;
+
+const isSortOption = (value: string | null): value is SortOption =>
+  value !== null && Object.prototype.hasOwnProperty.call(SORT_OPTIONS, value);
+
 function CatalogPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -29,6 +60,35 @@ function CatalogPage() {
       : 1;
 
   const selectedCategory = searchParams.get('category') ?? '';
+
+  const sortParam = searchParams.get('sort');
+
+  const currentSort: SortOption | null = isSortOption(sortParam)
+    ? sortParam
+    : null;
+
+  const sortConfig = currentSort ? SORT_OPTIONS[currentSort] : undefined;
+
+  const sortBy = sortConfig?.sortBy;
+  const order = sortConfig?.order;
+
+  const handleSortChange = (field: SortField) => {
+    const currentField = currentSort?.split('-')[0];
+
+    const nextOrder =
+      currentField === field
+        ? currentSort?.endsWith('-asc')
+          ? 'desc'
+          : 'asc'
+        : DEFAULT_SORT_ORDER[field];
+
+    const nextParams = new URLSearchParams(searchParams);
+
+    nextParams.set('sort', `${field}-${nextOrder}`);
+    nextParams.delete('page');
+
+    setSearchParams(nextParams);
+  };
 
   useEffect(() => {
     let isActive = true;
@@ -82,6 +142,18 @@ function CatalogPage() {
     selectedCategory,
     setSearchParams,
   ]);
+
+  useEffect(() => {
+    if (sortParam === null || isSortOption(sortParam)) {
+      return;
+    }
+
+    const nextParams = new URLSearchParams(searchParams);
+
+    nextParams.delete('sort');
+
+    setSearchParams(nextParams, { replace: true });
+  }, [searchParams, setSearchParams, sortParam]);
 
   useEffect(() => {
     const pageParam = searchParams.get('page');
@@ -158,6 +230,8 @@ function CatalogPage() {
           limit: PAGE_SIZE,
           skip: (currentPage - 1) * PAGE_SIZE,
           category: selectedCategory || undefined,
+          sortBy,
+          order,
         });
         if (isActive) {
           setProducts(data.products);
@@ -179,7 +253,7 @@ function CatalogPage() {
     return () => {
       isActive = false;
     };
-  }, [currentPage, selectedCategory, isCategoriesLoading]);
+  }, [currentPage, selectedCategory, isCategoriesLoading, sortBy, order]);
 
   function handlePageChange(page: number) {
     const nextParams = new URLSearchParams(searchParams);
@@ -262,6 +336,61 @@ function CatalogPage() {
             {categoriesError}
           </p>
         )}
+      </div>
+
+      <div className="mb-6 flex flex-wrap gap-2">
+        <h3 className='px-4 py-2'>Sort by:</h3>
+
+        <button
+          type="button"
+          onClick={() => {
+            const nextParams = new URLSearchParams(searchParams);
+
+            nextParams.delete('sort');
+            nextParams.delete('page');
+
+            setSearchParams(nextParams);
+          }}
+          aria-pressed={currentSort === null}
+          className={`rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${currentSort === null
+              ? 'border-brand bg-brand text-white'
+              : 'border-border-default bg-surface text-text-primary hover:bg-page'
+            }`}
+        >
+          Default
+        </button>
+
+        {(
+          [
+            ['price', 'Price'],
+            ['rating', 'Rating'],
+            ['discountPercentage', 'Discount'],
+            ['title', 'Name'],
+          ] as const
+        ).map(([field, label]) => {
+          const isActive = currentSort?.startsWith(`${field}-`) ?? false;
+
+          const direction = isActive
+            ? currentSort?.endsWith('-asc')
+              ? '↑'
+              : '↓'
+            : '';
+
+          return (
+            <button
+              key={field}
+              type="button"
+              onClick={() => handleSortChange(field)}
+              aria-pressed={isActive}
+              className={`rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${isActive
+                ? 'border-brand bg-brand text-white'
+                : 'border-border-default bg-surface text-text-primary hover:bg-page'
+                }`}
+            >
+              {label} {direction}
+            </button>
+          );
+        })}
       </div>
 
       {products.length > 0 ? (

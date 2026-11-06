@@ -8,12 +8,16 @@ interface FetchProductsParams {
   limit?: number;
   skip?: number;
   category?: string;
+  sortBy?: string;
+  order?: 'asc' | 'desc';
 }
 
 export async function fetchProducts({
   limit = 12,
   skip = 0,
   category,
+  sortBy,
+  order,
 }: FetchProductsParams = {}): Promise<ProductsResponse> {
   const endpoint = category
     ? `${API_URL}/category/${encodeURIComponent(category)}`
@@ -23,6 +27,14 @@ export async function fetchProducts({
 
   url.searchParams.set('limit', String(limit));
   url.searchParams.set('skip', String(skip));
+  
+  if (sortBy) {
+    url.searchParams.set('sortBy', sortBy);
+  }
+
+  if (order) {
+    url.searchParams.set('order', order);
+  }
 
   const data: unknown = await apiClient.get(url);
 
