@@ -44,10 +44,15 @@ function CatalogPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
   const [cartMessage, setCartMessage] = useState('');
   const [toastVisible, setToastVisible] = useState(false);
   const { addItem } = useCart();
+
   const [searchParams, setSearchParams] = useSearchParams();
+  const searchParam = searchParams.get('search') ?? '';
+  const [searchInput, setSearchInput] = useState(searchParam);
+
   const [categories, setCategories] = useState<string[]>([]);
   const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
   const [categoriesError, setCategoriesError] = useState<string | null>(null);
@@ -71,6 +76,10 @@ function CatalogPage() {
 
   const sortBy = sortConfig?.sortBy;
   const order = sortConfig?.order;
+
+  function handleSearchChange(value: string) {
+    setSearchInput(value);
+  }
 
   const handleSortChange = (field: SortField) => {
     const currentField = currentSort?.split('-')[0];
@@ -117,6 +126,35 @@ function CatalogPage() {
       isActive = false;
     };
   }, []);
+
+  useEffect(() => {
+    setSearchInput(searchParam);
+  }, [searchParam]);
+
+  useEffect(() => {
+    const normalizedSearch = searchInput.trim();
+
+    if (normalizedSearch === searchParam) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      const nextParams = new URLSearchParams(searchParams);
+
+      if (normalizedSearch) {
+        nextParams.set('search', normalizedSearch);
+      } else {
+        nextParams.delete('search');
+      }
+
+      nextParams.delete('category');
+      nextParams.delete('page');
+
+      setSearchParams(nextParams);
+    }, 400);
+
+    return () => window.clearTimeout(timer);
+  }, [searchInput, searchParam, searchParams, setSearchParams]);
 
   useEffect(() => {
     if (
@@ -217,8 +255,10 @@ function CatalogPage() {
   }, [toastVisible, cartMessage]);
 
   useEffect(() => {
-    let isActive = true;
     if (isCategoriesLoading) return;
+
+    let isActive = true;
+    const controller = new AbortController();
 
     async function loadProducts() {
       setIsLoading(true);
@@ -232,13 +272,19 @@ function CatalogPage() {
           category: selectedCategory || undefined,
           sortBy,
           order,
+          search: searchParam || undefined,
+          signal: controller.signal,
         });
+
         if (isActive) {
           setProducts(data.products);
           setTotal(data.total);
         }
-      } catch {
-        if (isActive) {
+      } catch (error) {
+        if (
+          isActive &&
+          !(error instanceof Error && error.name === 'AbortError')
+        ) {
           setError('Unable to load products. Please try again.');
         }
       } finally {
@@ -252,8 +298,16 @@ function CatalogPage() {
 
     return () => {
       isActive = false;
+      controller.abort();
     };
-  }, [currentPage, selectedCategory, isCategoriesLoading, sortBy, order]);
+  }, [
+    currentPage,
+    selectedCategory,
+    isCategoriesLoading,
+    sortBy,
+    order,
+    searchParam,
+  ]);
 
   function handlePageChange(page: number) {
     const nextParams = new URLSearchParams(searchParams);
@@ -267,31 +321,29 @@ function CatalogPage() {
     setSearchParams(nextParams);
   }
 
-  if (isLoading) {
-    return (
-      <PageContainer>
-        <p role="status" className="text-text-secondary">
-          Loading products...
-        </p>
-      </PageContainer>
-    );
-  }
-
-  if (error) {
-    return (
-      <PageContainer>
-        <p role="alert" className="text-red-600">
-          {error}
-        </p>
-      </PageContainer>
-    );
-  }
-
   return (
     <PageContainer>
       <h1 className="mb-6 text-3xl font-bold text-text-primary">
         Products
       </h1>
+
+      <div className="mb-6">
+        <label
+          htmlFor="product-search"
+          className="mb-2 block text-sm font-medium text-text-primary"
+        >
+          Search products
+        </label>
+
+        <input
+          id="product-search"
+          type="search"
+          value={searchInput}
+          onChange={(event) => handleSearchChange(event.target.value)}
+          placeholder="Search by product name..."
+          className="w-full max-w-md rounded-lg border border-border-default bg-surface px-4 py-2 text-sm text-text-primary outline-none transition-colors placeholder:text-text-secondary focus:border-brand"
+        />
+      </div>
 
       <div className="mb-6 flex flex-col items-center gap-3 md:flex-row">
         <label
@@ -353,8 +405,8 @@ function CatalogPage() {
           }}
           aria-pressed={currentSort === null}
           className={`rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${currentSort === null
-              ? 'border-brand bg-brand text-white'
-              : 'border-border-default bg-surface text-text-primary hover:bg-page'
+            ? 'border-brand bg-brand text-white'
+            : 'border-border-default bg-surface text-text-primary hover:bg-page'
             }`}
         >
           Default
@@ -393,7 +445,15 @@ function CatalogPage() {
         })}
       </div>
 
-      {products.length > 0 ? (
+      {isLoading ? (
+        <p role="status" className="text-text-secondary">
+          Loading products...
+        </p>
+      ) : error ? (
+        <p role="alert" className="text-red-600">
+          {error}
+        </p>
+      ) : products.length > 0 ? (
         <ProductGrid
           products={products}
           onAddToCart={handleAddToCart}

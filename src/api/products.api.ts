@@ -10,6 +10,8 @@ interface FetchProductsParams {
   category?: string;
   sortBy?: string;
   order?: 'asc' | 'desc';
+  search?: string;
+  signal?: AbortSignal;
 }
 
 export async function fetchProducts({
@@ -18,16 +20,24 @@ export async function fetchProducts({
   category,
   sortBy,
   order,
+  search,
+  signal,
 }: FetchProductsParams = {}): Promise<ProductsResponse> {
-  const endpoint = category
-    ? `${API_URL}/category/${encodeURIComponent(category)}`
-    : API_URL;
+  const endpoint = search
+    ? `${API_URL}/search`
+    : category
+      ? `${API_URL}/category/${encodeURIComponent(category)}`
+      : API_URL;
 
   const url = new URL(endpoint);
 
   url.searchParams.set('limit', String(limit));
   url.searchParams.set('skip', String(skip));
-  
+
+  if (search) {
+    url.searchParams.set('q', search);
+  }
+
   if (sortBy) {
     url.searchParams.set('sortBy', sortBy);
   }
@@ -36,7 +46,7 @@ export async function fetchProducts({
     url.searchParams.set('order', order);
   }
 
-  const data: unknown = await apiClient.get(url);
+  const data: unknown = await apiClient.get(url, { signal });
 
   if (
     typeof data !== 'object' ||

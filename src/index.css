@@ -12,3 +12,7 @@
 
   --color-border-default: #e5e7eb;
 }
+
+html {
+  overflow-y: scroll;
+}

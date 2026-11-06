@@ -1,3 +1,4 @@
+// api-client.ts
 export class ApiError extends Error {
   readonly status: number;
 
@@ -10,8 +11,13 @@ export class ApiError extends Error {
 }
 
 export class ApiClient {
-  async get(url: string | URL): Promise<unknown> {
-    const response = await fetch(url);
+  async get(
+    url: string | URL,
+    options?: { signal?: AbortSignal },
+  ): Promise<unknown> {
+    const response = await fetch(url, {
+      signal: options?.signal,
+    });
 
     if (!response.ok) {
       throw new ApiError(response.status, response.statusText);
