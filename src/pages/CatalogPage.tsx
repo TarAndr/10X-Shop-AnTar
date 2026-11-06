@@ -45,6 +45,8 @@ function CatalogPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const [retryCount, setRetryCount] = useState(0);
+
   const [cartMessage, setCartMessage] = useState('');
   const [toastVisible, setToastVisible] = useState(false);
   const { addItem } = useCart();
@@ -79,6 +81,10 @@ function CatalogPage() {
 
   function handleSearchChange(value: string) {
     setSearchInput(value);
+  }
+
+  function handleRetry() {
+    setRetryCount((count) => count + 1);
   }
 
   const handleSortChange = (field: SortField) => {
@@ -307,6 +313,7 @@ function CatalogPage() {
     sortBy,
     order,
     searchParam,
+    retryCount,
   ]);
 
   function handlePageChange(page: number) {
@@ -450,9 +457,19 @@ function CatalogPage() {
           Loading products...
         </p>
       ) : error ? (
-        <p role="alert" className="text-red-600">
-          {error}
-        </p>
+        <div className="flex flex-col items-start gap-3">
+          <p role="alert" className="text-red-600">
+            {error}
+          </p>
+
+          <button
+            type="button"
+            onClick={handleRetry}
+            className="rounded-lg bg-brand px-4 py-2 text-sm font-medium text-white transition-colors hover:opacity-90"
+          >
+            Retry
+          </button>
+        </div>
       ) : products.length > 0 ? (
         <ProductGrid
           products={products}

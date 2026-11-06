@@ -48,13 +48,13 @@ A single-page online shop built as an individual graduation project for the **10
 
 ### Optional features (FULL)
 
-- [ ] Category filter, sorting and pagination with the state stored in the URL (`useSearchParams`)
-- [ ] Search with debounce and request cancellation (`AbortController`)
-- [ ] Retry button on a failed catalog request
+- [X] Category filter, sorting and pagination with the state stored in the URL (`useSearchParams`)
+- [X] Search with debounce and request cancellation (`AbortController`)
+- [X] Retry button on a failed catalog request
 - [ ] Related products on the product page
 - [ ] Cart reducer (`useReducer`) and promo code
-- [ ] Lazy-loaded routes (`React.lazy` + `Suspense`)
-- [ ] Custom Tailwind theme token (`@theme`)
+- [X] Lazy-loaded routes (`React.lazy` + `Suspense`)
+- [X] Custom Tailwind theme token (`@theme`)
 - [ ] `ApiClient` / `ApiError` classes, type guards and a discriminated union `AsyncState<T>`
 
 ### Intentionally not included
