@@ -144,3 +144,41 @@ Imported `ApiError` from `api-client.ts` and updated the error handling logic to
 HTTP errors and network failures represent different conditions and should not be handled as equivalent cases. Error handling should distinguish between a resource that does not exist and a resource that could not be retrieved because of a communication or server failure.
 
 ---
+
+### Bug 5 — Page width shifts during navigation and product loading
+
+**Symptom**
+
+The page width visibly changed when navigating between catalog pages or loading search results. The content appeared to shift horizontally as the vertical scrollbar disappeared and reappeared.
+
+**Steps to reproduce**
+
+1. Open the catalog page.
+2. Navigate between catalog pages using the pagination controls.
+3. Enter a search query in the search field.
+4. Observe the page while the search results are loading.
+5. Notice that the page width changes when the loading state replaces the product grid and when the results appear.
+
+**Evidence**
+
+During manual testing, the page width was observed to change both when navigating between catalog pages and when entering a search query. The issue was particularly noticeable during product loading, when the page content temporarily became shorter. This caused the vertical scrollbar to disappear and reappear as the content height changed.
+
+**Root cause**
+
+The browser displayed the vertical scrollbar only when the page content exceeded the viewport height. When the content height changed during navigation or loading, the scrollbar could disappear temporarily. This changed the available viewport width and caused the page content to shift horizontally.
+
+**Fix**
+
+Added `html { overflow-y: scroll; }` to `index.css` to keep the vertical scrollbar space reserved regardless of the page content height. This prevents changes in the available viewport width and keeps the page layout stable during navigation and product loading.
+
+**Fix commit**
+
+`feat: add debounced product search with URL state`
+
+[View commit](https://github.com/TarAndr/10X-Shop-AnTar/commit/36613cd1553b3c425d93b094f6ad6a8e4fc0a653)
+
+**Lesson learned**
+
+Changes in page content height can affect the available viewport width when the browser dynamically displays or hides the vertical scrollbar. Reserving scrollbar space helps maintain a consistent layout and prevents horizontal shifts during navigation and asynchronous content loading.
+
+---
